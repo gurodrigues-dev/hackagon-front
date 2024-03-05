@@ -8,11 +8,11 @@ import FormRegisterAndLogin from "../../components/FormRegisterAndLogin/FormRegi
 function LoginAndRegister() {
 
   return (
-    <div className="login">
+    <div className="wrapper-login-and-register login">
       <div className="login-header">
         <h1 className="login__title">bem vindo de volta</h1>
-        <span className="login__subtitle">
-          Não possue uma conta ainda? <Link to="/register" className="login__link">cadastre-se</Link>
+        <span>
+          Não possue uma conta ainda? <Link to="/register">cadastre-se</Link>
         </span>
       </div>
       <FormRegisterAndLogin />
