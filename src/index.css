@@ -1,0 +1,60 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+:root {
+  /* Colors */
+
+  --Blue: #2196F3;
+  --Light-blue: #64B5F6;
+  --Dark-blue: #1976D2;
+  --Pastel-blue: #BBDEFB;
+  --Sky-blue: #B3E5FC;
+  --Light-gray: #ECEFF1;
+  --Dark-gray-opacity: rgba(51, 51, 51, 0.5);
+  --Dark-gray: #333333;
+
+  --White: #fff;
+  --Black: #000;
+
+  /* 
+    Azul Principal: #2196F3 (Azul moderadamente vibrante)
+    Azul Claro: #64B5F6 (Azul claro e suave)
+    Azul Escuro: #1976D2 (Azul profundo para realces)
+    Cinza Claro: #ECEFF1 (Cinza claro para fundos)
+    Branco: #FFFFFF (Para áreas de destaque e contraste)
+    Azul Pastel: #BBDEFB (Azul pastel suave)
+    Azul Celeste:#B3E5FC (Azul celeste para realces sutis)
+
+    verde menta: #98FF98
+  */
+  
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  color: var(--Dark-gray);
+  background: var(--Light-gray);
+  font-size: 1.6rem;
+}
+
+input {
+  outline: none;
+}
+
+a {
+  text-decoration: none;
+  color: var(--Light-blue);
+  font-weight: bold;
+}
+
+a, input {
+  cursor: pointer;
+}
+

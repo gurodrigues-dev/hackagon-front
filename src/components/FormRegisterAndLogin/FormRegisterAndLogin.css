@@ -1,0 +1,38 @@
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form__input {
+  width: 100%;
+  height: 5rem;
+  padding: 1rem;
+  background: transparent;
+  border: 2px solid var(--Blue);
+  border-radius: 10px;
+  transition: .4s;
+}
+
+.form__input:hover {
+  border-color: var(--Dark-blue);
+  transform: scale(1.02);
+}
+
+.form__btn {
+  width: 100%;
+  height: 5rem;
+  margin-top: 2rem;
+  background: var(--Dark-blue);
+  color: var(--White);
+  padding: 1rem;
+  border: none;
+  border-radius: 10px;
+  transition: .4s;
+  font-size: 1.8rem;
+}
+
+.form__btn:hover {
+  transform: scale(1.02);
+}
