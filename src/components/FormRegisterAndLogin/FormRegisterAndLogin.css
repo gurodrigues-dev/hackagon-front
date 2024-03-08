@@ -20,6 +20,15 @@
   transform: scale(1.02);
 }
 
+
+.form__input--error {
+  border-color: var(--Red);
+}
+
+.form__input.form__input--error:hover {
+  border-color: var(--Dark-red);
+}
+
 .form__btn {
   width: 100%;
   height: 5rem;

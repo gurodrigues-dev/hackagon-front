@@ -1,12 +1,11 @@
 import "./Login.css";
 
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 // Components
 import FormRegisterAndLogin from "../../components/FormRegisterAndLogin/FormRegisterAndLogin";
 
-function LoginAndRegister() {
-
+function Login() {
   return (
     <div className="wrapper-login-and-register login">
       <div className="login-header">
@@ -20,4 +19,4 @@ function LoginAndRegister() {
   )
 }
 
-export default LoginAndRegister;
+export default Login;

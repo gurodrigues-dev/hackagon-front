@@ -1,0 +1,56 @@
+.message {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 5% 1fr;
+  grid-gap: 0.5rem;
+  margin-top: 1rem;
+  border-radius: 10px;
+}
+
+.message--success {
+  background: var(--Light-green);
+  border: 2px solid var(--Green);
+  padding: 1rem;
+}
+
+.message--error-box {
+  background: var(--Light-red);
+  border: 2px solid var(--Red);
+  padding: 1rem;
+}
+
+.wrapper-icon {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.message__icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.message__icon--error {
+  color: var(--Red);
+}
+
+.message__icon--sucess {
+  color: var(--Green);
+}
+
+.message__text {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.message__text--error,
+.message--error-box {
+  color: var(--Red);
+}
+
+.message__text--success {
+  color: var(--Green);
+}
+

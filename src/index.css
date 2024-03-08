@@ -13,9 +13,17 @@
   --Dark-blue: #1976D2;
   --Pastel-blue: #BBDEFB;
   --Sky-blue: #B3E5FC;
+
   --Light-gray: #ECEFF1;
   --Dark-gray-opacity: rgba(51, 51, 51, 0.5);
   --Dark-gray: #333333;
+
+  --Red: #EF5350;
+  --Light-red: #efb1b0;
+  --Dark-red: #f80400;
+
+  --Light-green: #bbf8bb;
+  --Green: #3f9d3f;
 
   --White: #fff;
   --Black: #000;
@@ -52,6 +60,10 @@ a {
   text-decoration: none;
   color: var(--Light-blue);
   font-weight: bold;
+}
+
+a:hover {
+  color: var(--Blue)
 }
 
 a, input {
