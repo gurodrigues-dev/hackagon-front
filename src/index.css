@@ -25,6 +25,19 @@
   --Light-green: #bbf8bb;
   --Green: #3f9d3f;
 
+  /* --Easy-difficulty: #388E3C;
+  --Medium-difficulty: #FFA000;
+  --Hard-difficulty: #D32F2F; */
+
+  --Easy-difficulty-background: #C8E6C9;
+  --Easy-difficulty-text: #2E7D32;
+
+  --Medium-difficulty-background: #FFF9C4;
+  --Medium-difficulty-text: #FBC02D;
+
+  --Hard-difficulty-background: #FFCDD2;
+  --Hard-difficulty-text: #D32F2F;
+
   --White: #fff;
   --Black: #000;
 
