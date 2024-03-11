@@ -46,12 +46,6 @@ function FormRegisterAndLogin({ registerForm }) {
 
   };
 
-  useEffect(() => {
-    if(success) {
-      dispatch(login({ nickname, password }));
-    }
-  }, [success, dispatch, nickname, password]);
-
   const handleLogin = (e) => {
     e.preventDefault()
 
@@ -70,12 +64,22 @@ function FormRegisterAndLogin({ registerForm }) {
   }
 
   useEffect(() => {
-    dispatch(reset());
-  }, [dispatch]);
+    if(success) {
+      dispatch(login({ nickname, password }));
+    }
+  }, [success, dispatch, nickname, password]);
 
   useEffect(() => {
-    console.log(error)
-  }, [error])
+    if(error) {
+      setNickname("");
+      setEmail("");
+      setPassword("");
+    }
+  }, [dispatch, error])
+
+  useEffect(() => {
+    dispatch(reset());
+  }, [dispatch]);
 
   return (
     <form onSubmit={registerForm ? handleRegister : handleLogin} className="form" noValidate>
@@ -124,8 +128,8 @@ function FormRegisterAndLogin({ registerForm }) {
       { !loading && <input className="form__btn" type="submit" value={registerForm ? "Cadastrar" : "Entrar"} /> }
       { loading && <input className="form__btn" type="submit" value="Aguarde..." disabled/> }
 
-      {/* { success && <Notification message="Usuário cadastrado com sucesso" type="success"/> } */}
-      { error && <Notification message="E-mail ou senhas inválidos" type="error-box"/> }
+      { success.message && <Notification message="Usuário cadastrado com sucesso" type="success"/> }
+      { error && <Notification message={error.message} type="error-box"/> }
     </form>
 
   )

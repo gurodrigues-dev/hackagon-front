@@ -17,6 +17,10 @@ export const register = createAsyncThunk(
     try {
       const data = await authService.register({ nickname, email, password });
 
+      if(data.error) {
+        return thunkAPI.rejectWithValue(data.error);
+      }
+
       return data;
 
     } catch (error) {
@@ -65,11 +69,15 @@ export const authSlice = createSlice({
       .addCase(register.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
-        state.success = true;
+        state.success = {
+          message: "Usuário cadastrado com sucesso!"
+        };
       })
-      .addCase(register.rejected, (state, action) => {
+      .addCase(register.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = { 
+          message: "Desculpe, o usuário que você está tentando cadastrar já existe em nosso sistema. Por favor, tente novamente com um Nickname ou E-mail diferente."
+        };
         state.user = null;
       })
       .addCase(login.pending, (state) => {
@@ -82,9 +90,11 @@ export const authSlice = createSlice({
         state.success = true;
         state.user = action.payload;
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(login.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = {
+          message: "E-mail ou senhas inválidas. Por favor, tente novamente."
+        };
         state.user = null;
       });
   }
