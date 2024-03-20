@@ -10,11 +10,13 @@
 
   --Blue: #2196F3;
   --Light-blue: #64B5F6;
+  --Dark-blue-opacity: rgba(25, 118, 210, 0.5);
   --Dark-blue: #1976D2;
   --Pastel-blue: #BBDEFB;
   --Sky-blue: #B3E5FC;
 
   --Light-gray: #ECEFF1;
+  --Gray: #7B7A7A;
   --Dark-gray-opacity: rgba(51, 51, 51, 0.5);
   --Dark-gray: #333333;
 
@@ -65,6 +67,17 @@ body {
   font-size: 1.6rem;
 }
 
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
 input {
   outline: none;
 }
@@ -79,7 +92,7 @@ a:hover {
   color: var(--Blue)
 }
 
-a, input {
+a, input[type="submit"] {
   cursor: pointer;
 }
 
@@ -95,4 +108,22 @@ a, input {
   background: var(--White);
   border-radius: 15px;
   box-shadow: -5px 5px 15px var(--Dark-gray-opacity);
+}
+
+.inputs {
+  padding: 1rem;
+  background: transparent;
+  border: 2px solid var(--Blue);
+  border-radius: 10px;
+  transition: .4s;
+}
+
+.inputs:hover {
+  border-color: var(--Dark-blue);
+  transform: scale(1.02);
+}
+
+.logo {
+  width: 20rem;
+  height: auto;
 }

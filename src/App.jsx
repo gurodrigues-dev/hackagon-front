@@ -9,6 +9,7 @@ import { useAuth } from "./hooks/useAuth";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
+import CreateQuestions from "./pages/CreateQuestions/CreateQuestions";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/" element={auth ? <Home /> : <Navigate to="/login" />} />
           <Route path="/login" element={!auth ? <Login /> : <Navigate to="/" />} />
           <Route path="/register" element={!auth ? <Register /> : <Navigate to="/" />} />
+          <Route path="/questions" element={<CreateQuestions />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -85,7 +85,7 @@ function FormRegisterAndLogin({ registerForm }) {
     <form onSubmit={registerForm ? handleRegister : handleLogin} className="form" noValidate>
       <div>
         <input
-          className={!inputErrors.nickname ? "form__input" : "form__input form__input--error"}
+          className={!inputErrors.nickname ? "form__input inputs" : "form__input form__input--error"}
           type="text"
           name="nickname"
           placeholder="Nickname"
@@ -99,7 +99,7 @@ function FormRegisterAndLogin({ registerForm }) {
         registerForm &&
         <div>
           <input
-            className={!inputErrors.email ? "form__input" : "form__input form__input--error"}
+            className={!inputErrors.email ? "form__input inputs" : "form__input form__input--error"}
             type="email"
             name="email"
             placeholder="E-mail"
@@ -114,7 +114,7 @@ function FormRegisterAndLogin({ registerForm }) {
       }
       <div>
         <input
-          className={!inputErrors.password ? "form__input" : "form__input form__input--error"}
+          className={!inputErrors.password ? "form__input inputs" : "form__input form__input--error"}
           type="password"
           name="password"
           placeholder="Senha"

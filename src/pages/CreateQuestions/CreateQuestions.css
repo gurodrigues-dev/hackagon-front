@@ -1,0 +1,119 @@
+.label-input {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+
+.create-question {
+  width: min(65rem, 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 5rem;
+  background: var(--White);
+  border-radius: 15px;
+  box-shadow: -5px 5px 15px var(--Dark-gray-opacity);
+  margin-block: 5rem;
+}
+
+.question-form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.divider {
+  width: 100%;
+  height: 0.2rem;
+  background: var(--Dark-blue-opacity);
+  margin-block: 1rem;
+}
+
+.question-form__description {
+  resize: none;
+}
+
+
+.question-form-inner {
+  display: flex;
+  justify-content: flex-start;
+  gap: 7rem;
+}
+
+.label-date,
+.label-difficulty {
+  width: 25%;
+}
+
+.test {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.case-test {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.test-params {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.label-input {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.wrapper-input {
+  width: 100%;
+  position: relative;
+}
+
+.test-params__input {
+  width: 100%;
+}
+
+.test-params__btn {
+  border: 2px solid var(--Gray);
+  background: var(--Light-gray);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.test-params__btn--remove {
+  position: absolute;
+  left: -2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  padding-inline: 0.5rem;
+  border-radius: 5px;
+}
+
+.test-params__btn--add {
+  padding: 0.5rem;
+  font-size: 1.4rem;
+  border-radius: 10px;
+  transition: .4s;
+}
+
+.test-params__btn--add:hover {
+  transform: scale(1.02);
+}
+
+
+.question-form__btn {
+  border-radius: 10px;
+  padding: 1.5rem;
+  background: var(--Dark-blue);
+  border: none;
+  color: var(--White);
+}
