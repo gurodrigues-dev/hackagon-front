@@ -1,63 +1,70 @@
 import "./Home.css";
 
-import axios from "axios";
+import CodeEditor from "@uiw/react-textarea-code-editor";
 
 // Hooks
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-import CodeEditor from "@uiw/react-textarea-code-editor";
+// Redux
+import { getQuestion, reset } from "../../slices/questionSlice";
+
+// Components
+import LoadingAnimation from "../../components/Loading/LoadingAnimation";
+
 
 export default function Home() {
-  const [question, setQuestion] = useState("");
   const [code, setCode] = useState(``);
 
+  const dispatch = useDispatch();
+
+  const { loading, success, question } = useSelector((state) => state.question);
+
+  const handleClick = () => {
+  }
+  
   useEffect(() => {
-    async function getQuestion () {
-      try {
-        const user = JSON.parse(localStorage.getItem("user"));
-    
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/question`, {
-          headers: {
-            "Authorization": user.token,
-          }
-        });
-    
-        setQuestion(response.data)
-    
-      } catch (error) {
-        console.log(error.response)
-      }
-    }
-
-    getQuestion();
-
+    dispatch(getQuestion());
   }, []);
+
+  useEffect(() => {
+    dispatch(reset());
+  }, [dispatch]);
 
   return (
     <div className="home">
-      <div className="question">
-        <div className="question-header">
-          <h1 className="question__title">{ question.title }</h1>
-          <span className={`difficulty difficulty--${ question.level }`}>{ question.level }</span>
-        </div>
-        <p className="question__text"> { question.description } </p>
-      </div>
-      <div className="wrapper-editor">
-        <CodeEditor 
-          className="editor"
-          value={code}
-          language="js"
-          placeholder="Digite o código"
-          onChange={(e) => setCode(e.target.value)}
-          padding={25}
-          style={{
-            fontSize: 16,
-            overflowY: "auto",
-          }}
-        />
-        <button className="btn-editor">Enviar</button>
-      </div>
-      
+      {
+        loading ? (
+          <LoadingAnimation />
+        ) : (
+          <>
+            <div className="question">
+              <div className="question-header">
+                <h1 className="question__title">{ success && question.title }</h1>
+                <span className={`difficulty difficulty--${ success && question.level }`}>{ success && question.level }</span> 
+              </div>
+              <p className="question__text"> { success && question.description } </p>
+            </div>
+            <div className="wrapper-editor">
+              <CodeEditor 
+                className="editor"
+                value={code}
+                language="js"
+                placeholder="Digite o código"
+                onChange={(e) => setCode(e.target.value)}
+                padding={25}
+                style={{
+                  fontSize: 16,
+                  overflowY: "auto",
+                  backgroundColor: "#f5f5f5",
+                  color: "#333333"
+                }}
+              />
+              <button className="btn-editor" onClick={handleClick}>Enviar</button>
+            </div>
+          </>
+        )
+      }
     </div>
   )
 }
