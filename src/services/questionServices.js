@@ -17,8 +17,23 @@ const getQuestion = async (token) => {
   }
 }
 
+const createQuestion = async ({ username, password, title, description, level, date, inputs }) => {
+  try {
+    const response =  await axios.post(`${api}/question`, 
+      JSON.stringify({ username, password, title, description, level, date, inputs }),
+      { "Content-Type": "application/json" }
+    )
+
+    return response.data
+    
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const questionServices = {
   getQuestion,
+  createQuestion,
 };
 
 export default questionServices;

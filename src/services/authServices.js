@@ -24,8 +24,6 @@ const login = async ({nickname, password}) => {
       { "Content-Type": "application/json" },
     );
 
-    console.log(response)
-
     if(response) {
       localStorage.setItem("user", JSON.stringify(response.data));
     }

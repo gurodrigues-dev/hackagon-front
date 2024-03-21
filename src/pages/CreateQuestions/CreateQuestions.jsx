@@ -1,17 +1,28 @@
 import "./CreateQuestions.css";
 
 import { useState, useRef, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+// Redux
+import { createQuestion, reset } from "../../slices/questionSlice";
+
 
 import Flatpickr from "flatpickr";
 import 'flatpickr/dist/themes/material_blue.css';
 
-// import Notification from "../../components/Notification/Notification";
+import Notification from "../../components/Notification/Notification";
 
-// // Utils
+// Utils
 // import formValidation from "../../utils/formValidation";
 
 export default function CreateQuestions() {
-  const [email, setEmail] = useState("");
+  const initialValueTestCase = [
+    { params: ["", ""], response: "" },
+    { params: ["", ""], response: "" },
+    { params: ["", ""], response: "" },
+  ]
+
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   // const [inputErrors, setInputErrors] = useState({});
 
@@ -20,26 +31,13 @@ export default function CreateQuestions() {
   const [date, setDate] = useState("");
   const [level, setLevel] = useState("");
 
-  const [testCase, setTestCase] = useState([
-    { params: ["", ""], response: "" },
-    { params: ["", ""], response: "" },
-    { params: ["", ""], response: "" },
-  ]);
+  const [testCase, setTestCase] = useState(initialValueTestCase);
+
+  const dispatch = useDispatch();
+
+  const { loading, success, error } = useSelector((state) => state.question);
 
   const flatpickrRef = useRef(null);
-
-  useEffect(() => {
-    flatpickrRef.current = Flatpickr('.datepicker', {
-      dateFormat: 'd-m-Y',
-      onChange: function (selectedDates, dateStr) {
-        setDate(dateStr);
-      }
-    });
-
-    return () => {
-      flatpickrRef.current.destroy();
-    };
-  }, []);
 
   const handleParamChange = (testCaseIndex, paramIndex, value) => {
     setTestCase((prevTestCase) => {
@@ -88,7 +86,6 @@ export default function CreateQuestions() {
     });
   };
 
-
   const handleClick = (e) => {
     e.preventDefault();
 
@@ -101,7 +98,7 @@ export default function CreateQuestions() {
     // })
 
     const question = {
-      email,
+      username,
       password,
       title,
       description,
@@ -114,27 +111,56 @@ export default function CreateQuestions() {
       }
     };
 
-    console.log(question)
+    dispatch(createQuestion(question));
   }
+
+  useEffect(() => {
+    flatpickrRef.current = Flatpickr('.datepicker', {
+      dateFormat: 'Y-m-d',
+      onChange: function (selectedDates, dateStr) {
+        setDate(dateStr);
+      }
+    });
+
+    return () => {
+      flatpickrRef.current.destroy();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (success) {
+      console.log(success)
+      setTitle("")
+      setDescription("")
+      setDate("")
+      setLevel("")
+      setTestCase(initialValueTestCase)
+    }
+
+    setTimeout(() => {
+      dispatch(reset());
+    }, 4000)
+
+  }, [dispatch, success]);
 
   return (
     <div className="create-question">
       <form className="question-form" onSubmit={handleClick}>
         <label className="label-input">
-          E-mail
+          Nome de usuário
           <input
-            className="inputs" 
-            type="email"
-            name="email"
-            placeholder="E-mail"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email || ""}
+            className="inputs"
+            type="text"
+            name="userame"
+            placeholder="Nome de usuário"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username || ""}
           />
         </label>
         <label className="label-input">
           Senha
           <input
-            className="inputs" 
+            className="inputs"
             type="password"
             name="password"
             placeholder="Senha"
@@ -185,9 +211,9 @@ export default function CreateQuestions() {
               onChange={(e) => setLevel(e.target.value)}
               value={level || ""}
             >
-              <option className="select-level__option" value="Easy">Fácil</option>
-              <option className="select-level__option" value="Medium">Média</option>
-              <option className="select-level__option" value="Hard">Difícil</option>
+              <option className="select-level__option" value="easy">Fácil</option>
+              <option className="select-level__option" value="medium">Média</option>
+              <option className="select-level__option" value="hard">Difícil</option>
             </select>
           </label>
         </div>
@@ -243,6 +269,7 @@ export default function CreateQuestions() {
           }
         </div>
         <input className="question-form__btn" type="submit" value="Enviar" />
+        {success && <Notification message="Questão cadastrada com sucesso" type="success" />}
       </form>
     </div>
   )
