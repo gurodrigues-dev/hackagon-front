@@ -23,7 +23,7 @@ const login = async ({nickname, password}) => {
       JSON.stringify({ nickname, password }),
       { "Content-Type": "application/json" },
     );
-
+    
     if(response) {
       localStorage.setItem("user", JSON.stringify(response.data));
     }
@@ -36,7 +36,6 @@ const login = async ({nickname, password}) => {
 }
 
 const logout = () => {
-  console.log("remove")
   localStorage.removeItem("user");
 }
 

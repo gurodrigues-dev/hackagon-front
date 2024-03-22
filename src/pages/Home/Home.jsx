@@ -17,7 +17,8 @@ import { getQuestion, reset } from "../../slices/questionSlice";
 import LoadingAnimation from "../../components/Loading/LoadingAnimation";
 import Navbar from "../../components/Navbar/Navbar";
 
-import { MdDone, MdClose, MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
+// MdClose
+import { MdDone, MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 export default function Home() {
   const [expandedItems, setExpandedItems] = useState([]);

@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import questionServices from "../services/questionServices";
 
-const user = JSON.parse(localStorage.getItem("user"));
-
 const initialState = {
   question: null,
   error: false,
@@ -14,11 +12,14 @@ export const getQuestion = createAsyncThunk(
   "question/getQuestion",
   async(thunkAPI) => {
     try {
-      const data = await questionServices.getQuestion(user.token);
+      const user = JSON.parse(localStorage.getItem("user"));
 
+      const data = await questionServices.getQuestion(user.token);
+      
       return data;
 
     } catch (error) {
+      console.log(error)
       return thunkAPI.rejectWithValue(error.message);
     } 
   }
@@ -29,7 +30,6 @@ export const createQuestion = createAsyncThunk(
   async(dataQuestion, thunkAPI) => {
     try {
       const data = await questionServices.createQuestion(dataQuestion);
-      console.log(data)
       if(data.error) {
         return thunkAPI.rejectWithValue(data.error);
       }
