@@ -17,8 +17,13 @@ import { getQuestion, reset } from "../../slices/questionSlice";
 import LoadingAnimation from "../../components/Loading/LoadingAnimation";
 import Navbar from "../../components/Navbar/Navbar";
 
+import { MdDone, MdClose, MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
+
 export default function Home() {
+  const [expandedItems, setExpandedItems] = useState([]);
+
   const [code, setCode] = useState(`function main() {\n    // Escreva seu código aqui!\n};\n\nmodule.exports = main;`);
+
   const [tests, setTests] = useState({
     firstTest: null,
     secondTest: null,
@@ -28,6 +33,12 @@ export default function Home() {
   const dispatch = useDispatch();
 
   const { loading, success, question } = useSelector((state) => state.question);
+
+  const handleToggleItem = (index) => {
+    const newExpandedItems = [...expandedItems];
+    newExpandedItems[index] = !newExpandedItems[index];
+    setExpandedItems(newExpandedItems);
+  };
 
   const handleClick = async () => {
     const webContainer = await getWebContainerInstance();
@@ -122,29 +133,29 @@ export default function Home() {
 
           const regex = /(First|Second|Third)/gm;
 
-          if(output.includes("✓") || output.includes("✕")) {
+          if (output.includes("✓") || output.includes("✕")) {
             const match = output.match(regex)
 
             setTests(prevState => ({
               ...prevState,
-              [`${match[0].toLowerCase()}Test`]: output.includes("✓") ? "passed" : "failed"
+              [`${match[0].toLowerCase()}Test`]: output.includes("✓") ? true : false
             }));
           }
         }
       })
     )
-  }
+  };
 
   useEffect(() => {
     dispatch(getQuestion());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     dispatch(reset());
   }, [dispatch]);
 
   useEffect(() => {
-    if(tests.firstTest === "passed" && tests.secondTest === "passed" && tests.thirdTest === "passed") {
+    if (tests.firstTest && tests.secondTest && tests.thirdTest) {
       alert("Parabens! sua solução está correta.");
 
       setTests({
@@ -153,7 +164,7 @@ export default function Home() {
         thirdTest: null,
       })
 
-    } else if (tests.firstTest === "failed" || tests.secondTest === "failed" || tests.thirdTest === "failed") {
+    } else if (tests.firstTest === false || tests.secondTest === false || tests.thirdTest === false) {
       alert("Solução incorreta, tente novamente!");
 
       setTests({
@@ -167,12 +178,12 @@ export default function Home() {
 
   return (
     <div className="home">
+      <Navbar />
       {
         loading ? (
           <LoadingAnimation />
         ) : (
-          <div className="wrapper">
-            <Navbar />
+          <div className="content">
             <div className="question">
               <div className="question-header">
                 <h1 className="question__title">{success && question.title}</h1>
@@ -181,19 +192,91 @@ export default function Home() {
               <p className="question__text"> {success && question.description} </p>
             </div>
             <div className="wrapper-editor">
-              <CodeEditor
-                className="editor"
-                value={code}
-                language="js"
-                placeholder="Digite o código"
-                onChange={(e) => setCode(e.target.value)}
-                padding={25}
-                style={{
-                  fontSize: 16,
-                  overflowY: "auto",
-                }}
-              />
-              <button className="btn-editor" onClick={handleClick}>Enviar</button>
+              <div className="container-editor">
+                <CodeEditor
+                  className="editor"
+                  value={code}
+                  language="js"
+                  placeholder="Digite o código"
+                  onChange={(e) => setCode(e.target.value)}
+                  padding={25}
+                  style={{
+                    fontSize: 16,
+                    overflowY: "auto",
+                  }}
+                />
+              </div>
+              <div className="aside-editor">
+                <ul className="toggle-menu">
+                  <li className="toggle-menu__item" onClick={() => handleToggleItem(0)}>
+                    <div className="toggle-menu-title">
+                      {
+                        !expandedItems[0] ?
+                          <MdOutlineKeyboardArrowDown className="toggle-menu__icon-arrow" />
+                          :
+                          <MdOutlineKeyboardArrowUp className="toggle-menu__icon--arrow" />
+                      }
+
+                      <MdDone className="toggle-menu__icon toggle-menu__icon-status" />
+                      <h2 className="toggle-menu__item-text">Instalação de dependências</h2>
+                    </div>
+                    {expandedItems[0] && (
+                      <div className="toggle-menu__content"></div>
+                    )}
+                  </li>
+                  <li className="toggle-menu__item" onClick={() => handleToggleItem(1)}>
+                    <div className="toggle-menu-title">
+                      {
+                        !expandedItems[1] ?
+                          <MdOutlineKeyboardArrowDown className="toggle-menu__icon-arrow" />
+                          :
+                          <MdOutlineKeyboardArrowUp className="toggle-menu__icon--arrow" />
+                      }
+
+                      <MdDone className="toggle-menu__icon toggle-menu__icon-status" />
+                      <h2 className="toggle-menu__item-text">Primeiro teste</h2>
+                    </div>
+                    {expandedItems[1] && (
+                      <div className="toggle-menu__content"></div>
+                    )}
+                  </li>
+                  <li className="toggle-menu__item" onClick={() => handleToggleItem(2)}>
+                    <div className="toggle-menu-title">
+                      {
+                        !expandedItems[2] ?
+                          <MdOutlineKeyboardArrowDown className="toggle-menu__icon-arrow" />
+                          :
+                          <MdOutlineKeyboardArrowUp className="toggle-menu__icon--arrow" />
+                      }
+
+                      <MdDone className="toggle-menu__icon toggle-menu__icon-status" />
+                      <h2 className="toggle-menu__item-text">Segundo teste</h2>
+                    </div>
+                    {expandedItems[2] && (
+                      <div className="toggle-menu__content"></div>
+                    )}
+                  </li>
+                  <li className="toggle-menu__item" onClick={() => handleToggleItem(3)}>
+                    <div className="toggle-menu-title">
+                      {
+                        !expandedItems[3] ?
+                          <MdOutlineKeyboardArrowDown className="toggle-menu__icon-arrow" />
+                          :
+                          <MdOutlineKeyboardArrowUp className="toggle-menu__icon--arrow" />
+                      }
+
+                      <MdDone className="toggle-menu__icon toggle-menu__icon-status" />
+                      <h2 className="toggle-menu__item-text">Terceiro teste</h2>
+                    </div>
+                    {expandedItems[3] && (
+                      <div className="toggle-menu__content"></div>
+                    )}
+                  </li>
+                </ul>
+                <div className="wrapper-btn">
+                  <button className="btn-editor" onClick={handleClick}>Enviar</button>
+                </div>
+              </div>
             </div>
           </div>
         )

@@ -34,7 +34,6 @@ export const login = createAsyncThunk(
   async ({ nickname, password }, thunkAPI) => {
     try {
       const data = await authService.login({ nickname, password });
-
       if(data.error) {
         return thunkAPI.rejectWithValue(data.error);
       }

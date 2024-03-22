@@ -1,7 +1,7 @@
 .navbar {
   width: 100vw;
   height: 5rem;
-  padding: 1rem 8rem;
+  padding: 3rem 8rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -21,6 +21,8 @@
 .icon-logout {
   width: 2rem;
   height: 2rem;
+  color: var(--Dark-gray);
+  transition: 0.4s;
 }
 
 .navbar__btn-logout:hover .icon-logout {

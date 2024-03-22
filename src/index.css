@@ -16,8 +16,11 @@
   --Sky-blue: #B3E5FC;
 
   --Light-gray: #ECEFF1;
+  --Light-gray-opacity: rgba(198, 198, 198, 0.5);
   --Border-gray: #d2d2d2;
+  --Gray-opacity: rgb(151, 151, 151, 0.8);
   --Gray: #7B7A7A;
+  --Gray-opacity: rgba(160, 160, 160, 0.5);
   --Dark-gray-opacity: rgba(51, 51, 51, 0.5);
   --Dark-gray: #333333;
 
