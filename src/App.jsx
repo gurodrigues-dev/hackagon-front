@@ -14,7 +14,6 @@ import CreateQuestions from "./pages/CreateQuestions/CreateQuestions";
 // Components
 import LoadingAnimation from "./components/Loading/LoadingAnimation";
 
-
 function App() {
   const { auth, loading } = useAuth();
 

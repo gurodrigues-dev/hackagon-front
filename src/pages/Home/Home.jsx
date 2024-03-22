@@ -1,6 +1,9 @@
 import "./Home.css";
 
+// Editor
 import CodeEditor from "@uiw/react-textarea-code-editor";
+
+// Web container
 import { getWebContainerInstance } from "../../lib/web-container";
 
 // Hooks
@@ -12,7 +15,7 @@ import { getQuestion, reset } from "../../slices/questionSlice";
 
 // Components
 import LoadingAnimation from "../../components/Loading/LoadingAnimation";
-
+import Navbar from "../../components/Navbar/Navbar";
 
 export default function Home() {
   const [code, setCode] = useState(`function main() {\n    // Escreva seu código aqui!\n};\n\nmodule.exports = main;`);
@@ -142,7 +145,23 @@ export default function Home() {
 
   useEffect(() => {
     if(tests.firstTest === "passed" && tests.secondTest === "passed" && tests.thirdTest === "passed") {
-      alert("Parabens! sua solução está correta.")
+      alert("Parabens! sua solução está correta.");
+
+      setTests({
+        firstTest: null,
+        secondTest: null,
+        thirdTest: null,
+      })
+
+    } else if (tests.firstTest === "failed" || tests.secondTest === "failed" || tests.thirdTest === "failed") {
+      alert("Solução incorreta, tente novamente!");
+
+      setTests({
+        firstTest: null,
+        secondTest: null,
+        thirdTest: null,
+      })
+
     }
   }, [tests]);
 
@@ -152,17 +171,8 @@ export default function Home() {
         loading ? (
           <LoadingAnimation />
         ) : (
-          <>
-            {/* <div>
-              <h1>Test Progress</h1>
-              <svg width="100" height="100">
-                <circle cx="50" cy="50" r="40" stroke="#ccc" strokeWidth="10" fill="none" />
-                <circle cx="50" cy="50" r="40" stroke="#007bff" strokeWidth="10" fill="none"
-                  strokeDasharray={`${progress} 100`} transform="rotate(-90 50 50)" />
-              </svg>
-              <p>{`${progress.toFixed(2)}% completo`}</p> 
-            </div>
-            */}
+          <div className="wrapper">
+            <Navbar />
             <div className="question">
               <div className="question-header">
                 <h1 className="question__title">{success && question.title}</h1>
@@ -185,7 +195,7 @@ export default function Home() {
               />
               <button className="btn-editor" onClick={handleClick}>Enviar</button>
             </div>
-          </>
+          </div>
         )
       }
     </div>

@@ -16,6 +16,7 @@
   --Sky-blue: #B3E5FC;
 
   --Light-gray: #ECEFF1;
+  --Border-gray: #d2d2d2;
   --Gray: #7B7A7A;
   --Dark-gray-opacity: rgba(51, 51, 51, 0.5);
   --Dark-gray: #333333;
@@ -92,7 +93,7 @@ a:hover {
   color: var(--Blue)
 }
 
-a, input[type="submit"] {
+a, input[type="submit"], button {
   cursor: pointer;
 }
 

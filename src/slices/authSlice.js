@@ -10,7 +10,6 @@ const initialState = {
   loading: false,
 };
 
-// Register user
 export const register = createAsyncThunk(
   "auth/register",
   async ({ nickname, email, password }, thunkAPI) => {
@@ -30,7 +29,6 @@ export const register = createAsyncThunk(
   }
 );
 
-// Sign in an user
 export const login = createAsyncThunk(
   "auth/login",
   async ({ nickname, password }, thunkAPI) => {
@@ -49,6 +47,14 @@ export const login = createAsyncThunk(
 
   }
 );
+
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async () => {
+    await authService.logout();
+  }
+);
+
 
 export const authSlice = createSlice({
   name: "auth",
@@ -95,6 +101,12 @@ export const authSlice = createSlice({
         state.error = {
           message: "E-mail ou senhas inválidas. Por favor, tente novamente."
         };
+        state.user = null;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+        state.success = true;
         state.user = null;
       });
   }

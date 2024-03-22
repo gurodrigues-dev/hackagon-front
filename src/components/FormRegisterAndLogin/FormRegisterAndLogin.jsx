@@ -4,6 +4,7 @@ import "./FormRegisterAndLogin.css";
 // Hooks
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // Utils
 import formValidation from "../../utils/formValidation"
@@ -23,7 +24,9 @@ function FormRegisterAndLogin({ registerForm }) {
 
   const [inputErrors, setInputErrors] = useState({});
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
 
   const { loading, error, success } = useSelector((state) => state.auth);
 
@@ -40,6 +43,7 @@ function FormRegisterAndLogin({ registerForm }) {
 
     if (!newErrors) {
       dispatch(register(user))
+      navigate("/login")
     } else {
       setInputErrors(newErrors);
     }
@@ -63,11 +67,13 @@ function FormRegisterAndLogin({ registerForm }) {
     }
   }
 
-  useEffect(() => {
-    if(success) {
-      dispatch(login({ nickname, password }));
-    }
-  }, [success, dispatch, nickname, password]);
+
+  // Login após o cadastro
+  // useEffect(() => {
+  //   if(success) {
+  //     dispatch(login({ nickname, password }));
+  //   }
+  // }, [success, dispatch, nickname, password]);
 
   useEffect(() => {
     if(error) {

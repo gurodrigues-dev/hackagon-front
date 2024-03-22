@@ -35,7 +35,7 @@ export default function CreateQuestions() {
 
   const dispatch = useDispatch();
 
-  const { loading, success, error } = useSelector((state) => state.question);
+  const { success, error } = useSelector((state) => state.question);
 
   const flatpickrRef = useRef(null);
 
@@ -188,6 +188,7 @@ export default function CreateQuestions() {
             className="question-form__description inputs"
             cols="30"
             rows="10"
+            name="description"
             placeholder="Digite o enunciado da questão"
             value={description || ""}
             onChange={(e) => setDescription(e.target.value)}
@@ -200,6 +201,7 @@ export default function CreateQuestions() {
               className="datepicker inputs"
               placeholder="Selecione uma data"
               type="text"
+              name="date"
               onChange={(e) => setDate(e.target.value)}
               value={date || ""}
             />
@@ -208,6 +210,7 @@ export default function CreateQuestions() {
             Dificuldade
             <select
               className="select-level inputs"
+              name="level"
               onChange={(e) => setLevel(e.target.value)}
               value={level || ""}
             >
@@ -241,6 +244,7 @@ export default function CreateQuestions() {
                           <input
                             className="test-params__input inputs"
                             type="text"
+                            name="testParam"
                             onChange={(e) => handleParamChange(testCaseIndex, paramIndex, e.target.value)}
                             value={testCaseItem.params[paramIndex] || ""}
                           />
@@ -260,6 +264,7 @@ export default function CreateQuestions() {
                   <input
                     className="test__response inputs"
                     type="text"
+                    name="response"
                     onChange={(e) => handleResponseChange(testCaseIndex, e.target.value)}
                     value={testCaseItem.response || ""}
                   />
@@ -270,6 +275,7 @@ export default function CreateQuestions() {
         </div>
         <input className="question-form__btn" type="submit" value="Enviar" />
         {success && <Notification message="Questão cadastrada com sucesso" type="success" />}
+        { error && <Notification message={error.message} type="error-box"/> }
       </form>
     </div>
   )

@@ -1,0 +1,31 @@
+.navbar {
+  width: 100vw;
+  height: 5rem;
+  padding: 1rem 8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--Border-gray);
+}
+
+.navbar__btn-logout {
+  background: transparent;
+  border: none;
+  transition: .4s;
+}
+
+.navbar__btn-logout:hover {
+  transform: scale(1.1);
+}
+
+.icon-logout {
+  width: 2rem;
+  height: 2rem;
+}
+
+.navbar__btn-logout:hover .icon-logout {
+  color: var(--Dark-blue);
+}
+
+
+

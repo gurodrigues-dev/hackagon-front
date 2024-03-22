@@ -13,7 +13,7 @@ const getQuestion = async (token) => {
     return response.data;
 
   } catch (error) {
-    console.log(error.response)
+    return { error: error.message }
   }
 }
 
@@ -27,7 +27,7 @@ const createQuestion = async ({ username, password, title, description, level, d
     return response.data
     
   } catch (error) {
-    console.log(error);
+    return { error: error.message }
   }
 }
 
