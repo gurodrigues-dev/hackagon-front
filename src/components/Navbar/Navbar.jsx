@@ -5,8 +5,6 @@ import { useDispatch } from "react-redux";
 
 import { FiLogOut } from "react-icons/fi";
 
-// import logo from "../../assets/logo.png";
-
 // Redux
 import { logout, reset } from "../../slices/authSlice";
 
@@ -24,11 +22,7 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <div>
-        Logo
-        {/* <img src={logo} className="navbar__logo" alt="Logo Hackagon"/> */}
-      </div>
-
+      <img src="/logo.png" className="navbar__logo" alt="Logo Hackagon"/>
       <button className="navbar__btn-logout" onClick={handleLogout}>
         <FiLogOut className="icon-logout"/>
       </button>

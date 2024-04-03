@@ -35,7 +35,7 @@ export default function CreateQuestions() {
 
   const dispatch = useDispatch();
 
-  const { success, error } = useSelector((state) => state.question);
+  const { success, error, loading } = useSelector((state) => state.question);
 
   const flatpickrRef = useRef(null);
 
@@ -273,8 +273,12 @@ export default function CreateQuestions() {
             ))
           }
         </div>
-        <input className="question-form__btn" type="submit" value="Enviar" />
-        {success && <Notification message="Questão cadastrada com sucesso" type="success" />}
+        { !loading ? 
+          <input className="question-form__btn" type="submit" value="Enviar" /> 
+          :
+          <input className="question-form__btn" type="submit" value="Aguarde..." disabled/> 
+        }
+        { success && <Notification message="Questão cadastrada com sucesso" type="success" />}
         { error && <Notification message={error.message} type="error-box"/> }
       </form>
     </div>

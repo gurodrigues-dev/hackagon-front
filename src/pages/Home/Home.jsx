@@ -17,12 +17,17 @@ import { getQuestion, reset } from "../../slices/questionSlice";
 import LoadingAnimation from "../../components/Loading/LoadingAnimation";
 import Navbar from "../../components/Navbar/Navbar";
 
+import ANSIToHTML from "ansi-to-html";
+
 // MdClose
 import { MdDone, MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
 
+const ANSIConverter = new ANSIToHTML({ newline: true });
+
 export default function Home() {
   const [expandedItems, setExpandedItems] = useState([]);
-
+  const [outputDependencies, setOutputDependencies] = useState([]);
+  const [outputTests, setOutputTests] = useState([[], [], []]);
   const [code, setCode] = useState(`function main() {\n    // Escreva seu código aqui!\n};\n\nmodule.exports = main;`);
 
   const [tests, setTests] = useState({
@@ -41,7 +46,26 @@ export default function Home() {
     setExpandedItems(newExpandedItems);
   };
 
+  const addOutput = (prevOutputTests, data, index) => {
+    const updatedOutputTests = [...prevOutputTests];
+
+    if (!Array.isArray(updatedOutputTests[index])) {
+      updatedOutputTests[index] = [];
+    }
+
+    const arrayToUpdate = [...updatedOutputTests[index]];
+    arrayToUpdate.push(ANSIConverter.toHtml(data))
+
+    updatedOutputTests[index] = arrayToUpdate;
+
+    return updatedOutputTests;
+  }
+
   const handleClick = async () => {
+
+    setOutputDependencies([]);
+    setOutputTests([[], [], []]);
+
     const webContainer = await getWebContainerInstance();
 
     await webContainer.mount({
@@ -116,12 +140,12 @@ export default function Home() {
     install.output.pipeTo(
       new WritableStream({
         write(data) {
-          console.log(data.toString())
+          setOutputDependencies((state) => [...state, ANSIConverter.toHtml(data)])
         }
       })
     );
 
-    await install.exit
+    await install.exit;
 
     const start = await webContainer.spawn('npm', ['test'])
 
@@ -130,21 +154,36 @@ export default function Home() {
 
         write(data) {
           const output = data.toString();
-          console.log(output)
 
-          const regex = /(First|Second|Third)/gm;
 
-          if (output.includes("✓") || output.includes("✕")) {
-            const match = output.match(regex)
+          if (output.includes("Testes ›")) {
 
-            setTests(prevState => ({
-              ...prevState,
-              [`${match[0].toLowerCase()}Test`]: output.includes("✓") ? true : false
-            }));
+            const regex = /(?=^.*?Testes ›)/gm;
+            const testErrors = data.split(regex);
+
+            setOutputTests((prevOutputTests) => {
+              const updatedOutputTests = [...prevOutputTests];
+
+              updatedOutputTests[0].push(ANSIConverter.toHtml(testErrors[0]));
+              updatedOutputTests[1].push(ANSIConverter.toHtml(testErrors[1]));
+              updatedOutputTests[2].push(ANSIConverter.toHtml(testErrors[2]));
+
+              return updatedOutputTests
+            });
+
+          } else if (output.includes("First")) {
+            setOutputTests((prevOutputTests) => addOutput(prevOutputTests, data, 0))
+
+          } else if (output.includes("Second")) {
+            setOutputTests((prevOutputTests) => addOutput(prevOutputTests, data, 1))
+
+          } else if (output.includes("Third")) {
+            setOutputTests((prevOutputTests) => addOutput(prevOutputTests, data, 2))
+
           }
         }
       })
-    )
+    );
   };
 
   useEffect(() => {
@@ -173,7 +212,6 @@ export default function Home() {
         secondTest: null,
         thirdTest: null,
       })
-
     }
   }, [tests]);
 
@@ -222,7 +260,11 @@ export default function Home() {
                       <h2 className="toggle-menu__item-text">Instalação de dependências</h2>
                     </div>
                     {expandedItems[0] && (
-                      <div className="toggle-menu__content"></div>
+                      <div className="toggle-menu__content">
+                        {outputDependencies.map((line, index) => (
+                          <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
+                        ))}
+                      </div>
                     )}
                   </li>
                   <li className="toggle-menu__item" onClick={() => handleToggleItem(1)}>
@@ -238,7 +280,11 @@ export default function Home() {
                       <h2 className="toggle-menu__item-text">Primeiro teste</h2>
                     </div>
                     {expandedItems[1] && (
-                      <div className="toggle-menu__content"></div>
+                      <div className="toggle-menu__content">
+                        {outputTests[0].map((line, index) => (
+                          <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
+                        ))}
+                      </div>
                     )}
                   </li>
                   <li className="toggle-menu__item" onClick={() => handleToggleItem(2)}>
@@ -254,7 +300,11 @@ export default function Home() {
                       <h2 className="toggle-menu__item-text">Segundo teste</h2>
                     </div>
                     {expandedItems[2] && (
-                      <div className="toggle-menu__content"></div>
+                      <div className="toggle-menu__content">
+                        {outputTests[1].map((line, index) => (
+                          <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
+                        ))}
+                      </div>
                     )}
                   </li>
                   <li className="toggle-menu__item" onClick={() => handleToggleItem(3)}>
@@ -270,7 +320,11 @@ export default function Home() {
                       <h2 className="toggle-menu__item-text">Terceiro teste</h2>
                     </div>
                     {expandedItems[3] && (
-                      <div className="toggle-menu__content"></div>
+                      <div className="toggle-menu__content">
+                        {outputTests[2].map((line, index) => (
+                          <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
+                        ))}
+                      </div>
                     )}
                   </li>
                 </ul>

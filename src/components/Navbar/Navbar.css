@@ -8,6 +8,10 @@
   border-bottom: 2px solid var(--Border-gray);
 }
 
+.navbar__logo {
+  width: 20rem
+}
+
 .navbar__btn-logout {
   background: transparent;
   border: none;
