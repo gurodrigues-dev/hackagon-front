@@ -9,9 +9,11 @@ import { getWebContainerInstance } from "../../lib/web-container";
 // Hooks
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // Redux
-import { getQuestion, reset } from "../../slices/questionSlice";
+import { getQuestion, reset as resetQuestion} from "../../slices/questionSlice";
+import { logout, reset } from "../../slices/authSlice";
 
 // Components
 import LoadingAnimation from "../../components/LoadingAnimation/LoadingAnimation";
@@ -35,10 +37,11 @@ export default function Home() {
   const [loadingTests, setLoadingTests] = useState(false);
   const [testsResults, setTestsResults] = useState([]);
 
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { loading, success, error, question } = useSelector((state) => state.question);
+  const { loading: loadingQuestion, success: successQuestion, error: errorQuestion, question } = useSelector((state) => state.question);
+  const { user } = useSelector((state) => state.auth);
 
   const handleToggleItem = (index) => {
     const newExpandedItems = [...expandedItems];
@@ -197,12 +200,28 @@ export default function Home() {
     setLoadingTests(false);
   };
 
+  const verifyTokenValidity = (expirationDate) => {
+    const currentDate = new Date().getTime();
+
+    return currentDate > expirationDate ? false : true;
+  };
+
   useEffect(() => {
-    dispatch(getQuestion());
+    const tokenValidity = verifyTokenValidity(user.token.expiration);
+
+    if(tokenValidity) {
+      dispatch(getQuestion());
+    } else {
+      dispatch(logout());
+      dispatch(reset());
+
+      navigate("/login")
+    }
+
   }, []);
 
   useEffect(() => {
-    dispatch(reset());
+    dispatch(resetQuestion());
   }, [dispatch]);
 
   useEffect(() => {
@@ -217,16 +236,16 @@ export default function Home() {
       <Modal />
       <Navbar />
       {
-        loading || error ? (
+        loadingQuestion || errorQuestion ? (
           <LoadingAnimation />
         ) : (
           <div className="content">
             <div className="question">
               <div className="question-header">
-                <h1 className="question__title">{success && question.title}</h1>
-                <span className={`difficulty difficulty--${success && question.level}`}>{success && question.level}</span>
+                <h1 className="question__title">{successQuestion && question.title}</h1>
+                <span className={`difficulty difficulty--${successQuestion && question.level}`}>{successQuestion && question.level}</span>
               </div>
-              <p className="question__text"> {success && question.description} </p>
+              <p className="question__text"> {successQuestion && question.description} </p>
             </div>
             <div className="wrapper-editor">
               <div className="container-editor">

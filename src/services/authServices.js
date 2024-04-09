@@ -22,13 +22,24 @@ const login = async ({nickname, password}) => {
     const response = await axios.post(`${api}/login`,
       JSON.stringify({ nickname, password }),
       { "Content-Type": "application/json" },
-    );
+    );  
     
-    if(response) {
-      localStorage.setItem("user", JSON.stringify(response.data));
-    }
+    if(response.data) {   
+      const date = new Date();
+      const dateExpiration = new Date(date.getTime() + 1 * 60000)
+      
+      const dataUser = {
+        token: {
+          value: response.data.token,
+          expiration: dateExpiration.getTime()
+        },
+        user: {...response.data.user}
+      };
 
-    return response.data;
+      localStorage.setItem("data", JSON.stringify(dataUser));
+      
+      return dataUser;
+    }
 
   } catch (error) {
     return { error: error.message}
@@ -36,7 +47,7 @@ const login = async ({nickname, password}) => {
 }
 
 const logout = () => {
-  localStorage.removeItem("user");
+  localStorage.removeItem("data");
 }
 
 const authService = {

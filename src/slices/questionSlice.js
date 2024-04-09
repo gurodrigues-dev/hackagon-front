@@ -12,9 +12,9 @@ export const getQuestion = createAsyncThunk(
   "question/getQuestion",
   async(thunkAPI) => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
+      const userData = JSON.parse(localStorage.getItem("data"));
 
-      const data = await questionServices.getQuestion(user.token);
+      const data = await questionServices.getQuestion(userData.token.value);
       
       if(data.error) {
         return thunkAPI.rejectWithValue(data.error);

@@ -10,11 +10,11 @@
   height: 5rem;
 }
 
-.form__input--error {
+.inputs.form__input--error {
   border-color: var(--Red);
 }
 
-.form__input.form__input--error:hover {
+.form__input--error:hover {
   border-color: var(--Dark-red);
 }
 
