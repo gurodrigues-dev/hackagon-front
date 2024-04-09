@@ -8,23 +8,25 @@
 :root {
   /* Colors */
 
-  --Blue: #2196F3;
-  --Light-blue: #64B5F6;
+  /* --Blue: rgb(33, 150, 243); */
+  --Blue: rgb(0, 172, 217);
+  --Blue-opacity: rgba(33, 150, 243, 0.5);
+  --Light-blue: rgb(100, 181, 246);
+  --Dark-blue: rgb(25, 118, 210);
   --Dark-blue-opacity: rgba(25, 118, 210, 0.5);
-  --Dark-blue: #1976D2;
-  --Pastel-blue: #BBDEFB;
-  --Sky-blue: #B3E5FC;
+  --Pastel-blue: rgb(187, 222, 251);
+  --Sky-blue: rgb(179, 229, 252);
 
-  --Light-gray: #ECEFF1;
+  --Light-gray: rgb(236, 239, 241);
   --Light-gray-opacity: rgba(198, 198, 198, 0.5);
-  --Border-gray: #d2d2d2;
+  --Border-gray: rgb(210, 210, 210);
   --Gray-opacity: rgb(151, 151, 151, 0.8);
-  --Gray: #7B7A7A;
-  --Gray-opacity: rgba(160, 160, 160, 0.5);
+  --Gray: rgb(123, 122, 122);
+  --Gray-opacity: rgba(123, 122, 122, 0.5);
+  --Dark-gray: rgb(51, 51, 51);
   --Dark-gray-opacity: rgba(51, 51, 51, 0.5);
-  --Dark-gray: #333333;
 
-  --Red: #EF5350;
+  --Red: #fc0804;
   --Light-red: #efb1b0;
   --Dark-red: #f80400;
 
@@ -130,4 +132,8 @@ a, input[type="submit"], button {
 .logo {
   width: 20rem;
   height: auto;
+}
+
+.hide {
+  display: none;
 }

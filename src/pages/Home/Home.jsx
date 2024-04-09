@@ -14,31 +14,31 @@ import { useSelector, useDispatch } from "react-redux";
 import { getQuestion, reset } from "../../slices/questionSlice";
 
 // Components
-import LoadingAnimation from "../../components/Loading/LoadingAnimation";
+import LoadingAnimation from "../../components/LoadingAnimation/LoadingAnimation";
 import Navbar from "../../components/Navbar/Navbar";
 
+import { MdDone, MdClose, MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
+
 import ANSIToHTML from "ansi-to-html";
-
-// MdClose
-import { MdDone, MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
-
+import Modal from "../../components/Modal/Modal";
 const ANSIConverter = new ANSIToHTML({ newline: true });
 
 export default function Home() {
   const [expandedItems, setExpandedItems] = useState([]);
-  const [outputDependencies, setOutputDependencies] = useState([]);
-  const [outputTests, setOutputTests] = useState([[], [], []]);
   const [code, setCode] = useState(`function main() {\n    // Escreva seu código aqui!\n};\n\nmodule.exports = main;`);
+  
+  const [outputDependencies, setOutputDependencies] = useState([]);
+  const [loadingDependencies, setLoadingDependencies] = useState(false);
+  const [dependenciesResult, setDependenciesResult] = useState(false);
 
-  const [tests, setTests] = useState({
-    firstTest: null,
-    secondTest: null,
-    thirdTest: null,
-  });
+  const [outputTests, setOutputTests] = useState([[], [], []]);
+  const [loadingTests, setLoadingTests] = useState(false);
+  const [testsResults, setTestsResults] = useState([]);
+
 
   const dispatch = useDispatch();
 
-  const { loading, success, question } = useSelector((state) => state.question);
+  const { loading, success, error, question } = useSelector((state) => state.question);
 
   const handleToggleItem = (index) => {
     const newExpandedItems = [...expandedItems];
@@ -46,7 +46,7 @@ export default function Home() {
     setExpandedItems(newExpandedItems);
   };
 
-  const addOutput = (prevOutputTests, data, index) => {
+  const addOutputTests = (prevOutputTests, data, index) => {
     const updatedOutputTests = [...prevOutputTests];
 
     if (!Array.isArray(updatedOutputTests[index])) {
@@ -62,9 +62,13 @@ export default function Home() {
   }
 
   const handleClick = async () => {
+    setLoadingDependencies(true);
+    setLoadingTests(true);
 
     setOutputDependencies([]);
     setOutputTests([[], [], []]);
+    setTestsResults([])
+    setDependenciesResult(false)
 
     const webContainer = await getWebContainerInstance();
 
@@ -146,6 +150,8 @@ export default function Home() {
     );
 
     await install.exit;
+    setLoadingDependencies(false);
+    setDependenciesResult(true)
 
     const start = await webContainer.spawn('npm', ['test'])
 
@@ -154,36 +160,41 @@ export default function Home() {
 
         write(data) {
           const output = data.toString();
+          const regex = /[✓✕]/gm;
 
+          if(regex.test(output)) {
+            if (output.includes("First")) {
+              setOutputTests((prevState) => addOutputTests(prevState, data, 0));
+              setTestsResults((prevState) => [...prevState, output.includes("✓") ? true : false]);
+              
+            }
+            else if (output.includes("Second")) {
+              setOutputTests((prevState) => addOutputTests(prevState, data, 1));
+              setTestsResults((prevState) => [...prevState, output.includes("✓") ? true : false]);
+          
+            } 
+            else if (output.includes("Third")) {
+              setOutputTests((prevState) => addOutputTests(prevState, data, 2));
+              setTestsResults((prevState) => [...prevState, output.includes("✓") ? true : false]);
+            }
+          }
 
-          if (output.includes("Testes ›")) {
-
+          if(output.includes("Testes ›")) {
             const regex = /(?=^.*?Testes ›)/gm;
             const testErrors = data.split(regex);
-
-            setOutputTests((prevOutputTests) => {
-              const updatedOutputTests = [...prevOutputTests];
-
-              updatedOutputTests[0].push(ANSIConverter.toHtml(testErrors[0]));
-              updatedOutputTests[1].push(ANSIConverter.toHtml(testErrors[1]));
-              updatedOutputTests[2].push(ANSIConverter.toHtml(testErrors[2]));
-
-              return updatedOutputTests
-            });
-
-          } else if (output.includes("First")) {
-            setOutputTests((prevOutputTests) => addOutput(prevOutputTests, data, 0))
-
-          } else if (output.includes("Second")) {
-            setOutputTests((prevOutputTests) => addOutput(prevOutputTests, data, 1))
-
-          } else if (output.includes("Third")) {
-            setOutputTests((prevOutputTests) => addOutput(prevOutputTests, data, 2))
-
+            
+            setOutputTests((prevState) => ([
+              [...prevState[0], ANSIConverter.toHtml(testErrors[0])],
+              [...prevState[1], ANSIConverter.toHtml(testErrors[1])],
+              [...prevState[2], ANSIConverter.toHtml(testErrors[2])]
+            ]));
           }
         }
       })
     );
+
+    await start.exit;
+    setLoadingTests(false);
   };
 
   useEffect(() => {
@@ -195,31 +206,18 @@ export default function Home() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (tests.firstTest && tests.secondTest && tests.thirdTest) {
-      alert("Parabens! sua solução está correta.");
-
-      setTests({
-        firstTest: null,
-        secondTest: null,
-        thirdTest: null,
-      })
-
-    } else if (tests.firstTest === false || tests.secondTest === false || tests.thirdTest === false) {
-      alert("Solução incorreta, tente novamente!");
-
-      setTests({
-        firstTest: null,
-        secondTest: null,
-        thirdTest: null,
-      })
+    if(testsResults[0] && testsResults[1] && testsResults[2]) {
+      const modal = document.querySelector("#modal");
+      modal.classList.remove("hide");
     }
-  }, [tests]);
+  }, [testsResults]);
 
   return (
     <div className="home">
+      <Modal />
       <Navbar />
       {
-        loading ? (
+        loading || error ? (
           <LoadingAnimation />
         ) : (
           <div className="content">
@@ -255,8 +253,17 @@ export default function Home() {
                           :
                           <MdOutlineKeyboardArrowUp className="toggle-menu__icon--arrow" />
                       }
-
-                      <MdDone className="toggle-menu__icon toggle-menu__icon-status" />
+                      {
+                        !loadingDependencies ? (
+                          !dependenciesResult ? (
+                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
+                          ) : (
+                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
+                          )
+                         ) : (
+                          <div className="loader"></div>
+                        )
+                      }
                       <h2 className="toggle-menu__item-text">Instalação de dependências</h2>
                     </div>
                     {expandedItems[0] && (
@@ -275,12 +282,26 @@ export default function Home() {
                           :
                           <MdOutlineKeyboardArrowUp className="toggle-menu__icon--arrow" />
                       }
-
-                      <MdDone className="toggle-menu__icon toggle-menu__icon-status" />
+                      {
+                        !loadingTests ? (
+                          testsResults.length === 0 ? (
+                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
+                          ) : (
+                            testsResults[0] === true ? (
+                              <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
+                            ) : (
+                              <MdClose className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--error" />
+                            )
+                          )
+                        ) : (
+                          <div className="loader"></div>
+                        )
+                      }
                       <h2 className="toggle-menu__item-text">Primeiro teste</h2>
                     </div>
                     {expandedItems[1] && (
                       <div className="toggle-menu__content">
+                        {loadingTests && <p>Executando os tests...</p>}
                         {outputTests[0].map((line, index) => (
                           <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
                         ))}
@@ -295,12 +316,26 @@ export default function Home() {
                           :
                           <MdOutlineKeyboardArrowUp className="toggle-menu__icon--arrow" />
                       }
-
-                      <MdDone className="toggle-menu__icon toggle-menu__icon-status" />
+                      {
+                        !loadingTests ? (
+                          testsResults.length === 0 ? (
+                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
+                          ) : (
+                            testsResults[1] === true ? (
+                              <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
+                            ) : (
+                              <MdClose className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--error" />
+                            )
+                          )
+                        ) : (
+                          <div className="loader"></div>
+                        )
+                      }
                       <h2 className="toggle-menu__item-text">Segundo teste</h2>
                     </div>
                     {expandedItems[2] && (
                       <div className="toggle-menu__content">
+                        {loadingTests && <p>Executando os tests...</p>}
                         {outputTests[1].map((line, index) => (
                           <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
                         ))}
@@ -315,12 +350,26 @@ export default function Home() {
                           :
                           <MdOutlineKeyboardArrowUp className="toggle-menu__icon--arrow" />
                       }
-
-                      <MdDone className="toggle-menu__icon toggle-menu__icon-status" />
+                      {
+                        !loadingTests ? (
+                          testsResults.length === 0 ? (
+                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
+                          ) : (
+                            testsResults[2] === true ? (
+                              <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
+                            ) : (
+                              <MdClose className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--error" />
+                            )
+                          )
+                        ) : (
+                          <div className="loader"></div>
+                        )
+                      }
                       <h2 className="toggle-menu__item-text">Terceiro teste</h2>
                     </div>
                     {expandedItems[3] && (
                       <div className="toggle-menu__content">
+                        {loadingTests && <p>Executando os tests...</p>}
                         {outputTests[2].map((line, index) => (
                           <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
                         ))}
@@ -329,7 +378,11 @@ export default function Home() {
                   </li>
                 </ul>
                 <div className="wrapper-btn">
-                  <button className="btn-editor" onClick={handleClick}>Enviar</button>
+                  {!loadingDependencies && !loadingTests ?
+                    <button className="btn-editor" onClick={handleClick}>Enviar</button>
+                    :
+                    <button className="btn-editor" onClick={handleClick} disabled>Execultando...</button>
+                  }
                 </div>
               </div>
             </div>

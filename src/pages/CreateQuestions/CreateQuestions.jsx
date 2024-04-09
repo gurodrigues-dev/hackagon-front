@@ -6,14 +6,15 @@ import { useSelector, useDispatch } from "react-redux";
 // Redux
 import { createQuestion, reset } from "../../slices/questionSlice";
 
-
+// Date
 import Flatpickr from "flatpickr";
 import 'flatpickr/dist/themes/material_blue.css';
 
+// Components
 import Notification from "../../components/Notification/Notification";
 
 // Utils
-// import formValidation from "../../utils/formValidation";
+import formValidation from "../../utils/formValidation";
 
 export default function CreateQuestions() {
   const initialValueTestCase = [
@@ -24,7 +25,7 @@ export default function CreateQuestions() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const [inputErrors, setInputErrors] = useState({});
+  const [inputErrors, setInputErrors] = useState({});
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -89,13 +90,13 @@ export default function CreateQuestions() {
   const handleClick = (e) => {
     e.preventDefault();
 
-    // const newErrors = formValidation({
-    //   title,
-    //   description,
-    //   date,
-    //   level,
-    //   testCase
-    // })
+    const newErrors = formValidation({
+      title,
+      description,
+      date,
+      level,
+      testCase
+    })
 
     const question = {
       username,
@@ -129,7 +130,6 @@ export default function CreateQuestions() {
 
   useEffect(() => {
     if (success) {
-      console.log(success)
       setTitle("")
       setDescription("")
       setDate("")

@@ -16,6 +16,10 @@ export const getQuestion = createAsyncThunk(
 
       const data = await questionServices.getQuestion(user.token);
       
+      if(data.error) {
+        return thunkAPI.rejectWithValue(data.error);
+      }
+
       return data;
 
     } catch (error) {
