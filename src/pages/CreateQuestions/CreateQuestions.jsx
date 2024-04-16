@@ -23,16 +23,26 @@ export default function CreateQuestions() {
     { params: ["", ""], response: "" },
   ]
 
+  const initialValuesInputErrors = {
+    title: "",
+    description: "",
+    level: "",
+    date: "",
+    testCase1: { params: [], response: ""},
+    testCase2: { params: [], response: ""},
+    testCase3: { params: [], response: ""}
+  }
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [inputErrors, setInputErrors] = useState({});
-
+  
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [level, setLevel] = useState("");
-
+  
   const [testCase, setTestCase] = useState(initialValueTestCase);
+  const [inputErrors, setInputErrors] = useState(initialValuesInputErrors);
 
   const dispatch = useDispatch();
 
@@ -91,6 +101,8 @@ export default function CreateQuestions() {
     e.preventDefault();
 
     const newErrors = formValidation({
+      username,
+      password,
       title,
       description,
       date,
@@ -98,21 +110,26 @@ export default function CreateQuestions() {
       testCase
     })
 
-    const question = {
-      username,
-      password,
-      title,
-      description,
-      level,
-      date,
-      inputs: {
-        test1: { ...testCase[0] },
-        test2: { ...testCase[1] },
-        test3: { ...testCase[2] },
-      }
-    };
+    if(newErrors) {
+      setInputErrors(newErrors);
+    } else {
+      const question = {
+        username,
+        password,
+        title,
+        description,
+        level,
+        date,
+        inputs: {
+          test1: { ...testCase[0] },
+          test2: { ...testCase[1] },
+          test3: { ...testCase[2] },
+        }
+      };
+  
+      dispatch(createQuestion(question));
+    }
 
-    dispatch(createQuestion(question));
   }
 
   useEffect(() => {
@@ -149,24 +166,26 @@ export default function CreateQuestions() {
         <label className="label-input">
           Nome de usuário
           <input
-            className="inputs"
+            className={!inputErrors.username ? "inputs" : "inputs inputs--error"}
             type="text"
             name="userame"
             placeholder="Nome de usuário"
             onChange={(e) => setUsername(e.target.value)}
             value={username || ""}
           />
+          { inputErrors.username && <Notification message={inputErrors.username} type="error" /> }
         </label>
         <label className="label-input">
           Senha
           <input
-            className="inputs"
+            className={!inputErrors.password ? "inputs" : "inputs inputs--error"}
             type="password"
             name="password"
             placeholder="Senha"
             onChange={(e) => setPassword(e.target.value)}
             value={password || ""}
           />
+          { inputErrors.password && <Notification message={inputErrors.password} type="error" /> }
         </label>
 
         <span className="divider"></span>
@@ -174,18 +193,19 @@ export default function CreateQuestions() {
         <label className="label-input">
           Título
           <input
-            className="question-form__title inputs"
+            className={!inputErrors.title ? "question-form__title inputs" : "question-form__title inputs inputs--error"}
             type="text"
             name="title"
             placeholder="Titulo da questão"
             value={title || ""}
             onChange={(e) => setTitle(e.target.value)}
           />
+          { inputErrors.title && <Notification message={inputErrors.title} type="error" /> }
         </label>
         <label className="label-input">
           Descrição
           <textarea
-            className="question-form__description inputs"
+            className={!inputErrors.description ? "question-form__description inputs" : "question-form__title inputs inputs--error"}
             cols="30"
             rows="10"
             name="description"
@@ -193,23 +213,25 @@ export default function CreateQuestions() {
             value={description || ""}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
+          { inputErrors.description && <Notification message={inputErrors.description} type="error" /> }
         </label>
         <div className="question-form-inner">
           <label className="label-input label-date">
             Data
             <input
-              className="datepicker inputs"
+              className={!inputErrors.date ? "datepicker inputs" : "datepicker inputs inputs--error"}
               placeholder="Selecione uma data"
               type="text"
               name="date"
               onChange={(e) => setDate(e.target.value)}
               value={date || ""}
             />
+            { inputErrors.date && <Notification message={inputErrors.date} type="error" /> }
           </label>
           <label className="label-input label-difficulty">
             Dificuldade
             <select
-              className="select-level inputs"
+              className={!inputErrors.level ? "select-level inputs" : "select-level inputs inputs--error"}
               name="level"
               onChange={(e) => setLevel(e.target.value)}
               value={level || ""}
@@ -218,6 +240,7 @@ export default function CreateQuestions() {
               <option className="select-level__option" value="medium">Média</option>
               <option className="select-level__option" value="hard">Difícil</option>
             </select>
+            { inputErrors.level && <Notification message={inputErrors.level} type="error" /> }
           </label>
         </div>
         <div className="test">
@@ -242,7 +265,13 @@ export default function CreateQuestions() {
                           }
 
                           <input
-                            className="test-params__input inputs"
+                            className={
+                              !inputErrors[`testCase${testCaseIndex + 1}`].params[paramIndex] ? (
+                                "test-params__input inputs"
+                              ) : (
+                                "test-params__input inputs inputs--error"
+                              ) 
+                            }
                             type="text"
                             name="testParam"
                             onChange={(e) => handleParamChange(testCaseIndex, paramIndex, e.target.value)}
@@ -262,12 +291,20 @@ export default function CreateQuestions() {
                 <label className="label-input">
                   {`${testCaseIndex + 1}° Resultado`}
                   <input
-                    className="test__response inputs"
+                    className={
+                      !inputErrors[`testCase${testCaseIndex + 1}`].response ? (
+                        "test__response inputs"
+                      ) : (
+                        "test__response inputs inputs--error"
+                      ) 
+                    }
                     type="text"
                     name="response"
                     onChange={(e) => handleResponseChange(testCaseIndex, e.target.value)}
                     value={testCaseItem.response || ""}
                   />
+                  
+                  { inputErrors[`testCase${testCaseIndex + 1}`].response && <Notification message={inputErrors[`testCase${testCaseIndex + 1}`].response} type="error" /> }
                 </label>
               </div>
             ))

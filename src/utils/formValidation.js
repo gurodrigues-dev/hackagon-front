@@ -3,6 +3,7 @@ function formValidation ({
   nickname = null, 
   email = null, 
   password = null, 
+  username = null,
   title = null, 
   description = null, 
   date = null, 
@@ -31,6 +32,12 @@ function formValidation ({
       errors.password = 'Senha é obrigatória';
     } else if (!regularExpression.test(password)) {
       errors.password = "A senha deve conter no mínimo 6 caracteres e um número"
+    }
+  }
+
+  if(username !== null) {
+    if(!username.trim()) {
+      errors.username = "Usuário é obrigatório";
     }
   }
 
@@ -64,7 +71,7 @@ function formValidation ({
 
       const params = element.params.map((param) => {
         if(!param.trim()) {
-          return "Campo obrigatório!"
+          return "Obrigatório!"
         } else {
           return null
         }
@@ -73,7 +80,7 @@ function formValidation ({
       errors[`testCase${index + 1}`].params = [...params];
       
       if(!element.response.trim()) {
-        errors[`testCase${index + 1}`].response = "Campo obrigatório!"
+        errors[`testCase${index + 1}`].response = "Obrigatório!"
       }
     });
   }

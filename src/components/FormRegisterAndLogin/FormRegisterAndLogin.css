@@ -10,14 +10,6 @@
   height: 5rem;
 }
 
-.inputs.form__input--error {
-  border-color: var(--Red);
-}
-
-.form__input--error:hover {
-  border-color: var(--Dark-red);
-}
-
 .form__btn {
   width: 100%;
   height: 5rem;

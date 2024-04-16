@@ -129,6 +129,14 @@ a, input[type="submit"], button {
   transform: scale(1.02);
 }
 
+.inputs.inputs--error {
+  border-color: var(--Red);
+}
+
+.inputs.inputs--error:hover {
+  border-color: var(--Dark-red);
+}
+
 .logo {
   width: 20rem;
   height: auto;
