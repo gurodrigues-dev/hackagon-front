@@ -12,24 +12,64 @@
   width: 20rem
 }
 
-.navbar__btn-logout {
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.user-infos {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--Border-gray);
+  border-radius: 15px;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  cursor: pointer;
+}
+
+.user-infos__points {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--Medium-difficulty-text)
+}
+
+.user-infos-inner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-infos__nickname {
+  font-weight: bold;
+}
+
+.user-infos__img {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--Light-gray-opacity);
+}
+
+.menu__btn {
   background: transparent;
   border: none;
   transition: .4s;
 }
 
-.navbar__btn-logout:hover {
+.menu__btn:hover {
   transform: scale(1.1);
 }
 
-.icon-logout {
+.menu__icon {
   width: 2rem;
   height: 2rem;
   color: var(--Dark-gray);
   transition: 0.4s;
 }
 
-.navbar__btn-logout:hover .icon-logout {
+.menu__btn:hover .menu__icon {
   color: var(--Dark-blue);
 }
 
