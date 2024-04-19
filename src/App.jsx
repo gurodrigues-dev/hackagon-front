@@ -10,6 +10,7 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
 import CreateQuestions from "./pages/CreateQuestions/CreateQuestions";
+import Ranking from "./pages/Ranking/Ranking";
 
 // Components
 import LoadingAnimation from "./components/LoadingAnimation/LoadingAnimation";
@@ -30,6 +31,7 @@ function App() {
           <Route path="/login" element={!auth ? <Login /> : <Navigate to="/" />} />
           <Route path="/register" element={!auth ? <Register /> : <Navigate to="/" />} />
           <Route path="/questions" element={<CreateQuestions />} />
+          <Route path="/ranking" element={auth ? <Ranking /> : <Navigate to="/login" />} />
         </Routes>
       </BrowserRouter>
     </div>

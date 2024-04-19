@@ -26,7 +26,7 @@ const login = async ({nickname, password}) => {
     
     if(response.data) {   
       const date = new Date();
-      const dateExpiration = new Date(date.getTime() + 1 * 60000)
+      const dateExpiration = new Date(date.getTime() + 1440 * 60000)
       
       const dataUser = {
         token: {

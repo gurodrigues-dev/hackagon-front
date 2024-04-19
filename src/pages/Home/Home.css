@@ -184,6 +184,9 @@
   background: var(--Blue);
 }
 
+.btn-editor.btn--disabled {
+  background-color: var(--Dark-blue-opacity);
+}
 
 .loader {
   border: 2px solid #f3f3f3;

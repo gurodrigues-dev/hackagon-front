@@ -12,23 +12,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 // Redux
-import { getQuestion, reset as resetQuestion} from "../../slices/questionSlice";
+import { getQuestion, reset as resetQuestion, answerQuestion } from "../../slices/questionSlice";
 import { logout, reset } from "../../slices/authSlice";
 
 // Components
 import LoadingAnimation from "../../components/LoadingAnimation/LoadingAnimation";
 import Navbar from "../../components/Navbar/Navbar";
+import Modal from "../../components/Modal/Modal";
 
+// Icons
 import { MdDone, MdClose, MdOutlineKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
 
+// Converter ANSI to HTML
 import ANSIToHTML from "ansi-to-html";
-import Modal from "../../components/Modal/Modal";
 const ANSIConverter = new ANSIToHTML({ newline: true });
 
 export default function Home() {
   const [expandedItems, setExpandedItems] = useState([]);
   const [code, setCode] = useState(`function main() {\n    // Escreva seu código aqui!\n};\n\nmodule.exports = main;`);
-  
+
   const [outputDependencies, setOutputDependencies] = useState([]);
   const [loadingDependencies, setLoadingDependencies] = useState(false);
   const [dependenciesResult, setDependenciesResult] = useState(false);
@@ -36,6 +38,7 @@ export default function Home() {
   const [outputTests, setOutputTests] = useState([[], [], []]);
   const [loadingTests, setLoadingTests] = useState(false);
   const [testsResults, setTestsResults] = useState([]);
+  const [answer, setAnswer] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -151,7 +154,7 @@ export default function Home() {
         }
       })
     );
-
+    
     await install.exit;
     setLoadingDependencies(false);
     setDependenciesResult(true)
@@ -160,32 +163,31 @@ export default function Home() {
 
     start.output.pipeTo(
       new WritableStream({
-
         write(data) {
           const output = data.toString();
           const regex = /[✓✕]/gm;
 
-          if(regex.test(output)) {
+          if (regex.test(output)) {
             if (output.includes("First")) {
               setOutputTests((prevState) => addOutputTests(prevState, data, 0));
               setTestsResults((prevState) => [...prevState, output.includes("✓") ? true : false]);
-              
+
             }
             else if (output.includes("Second")) {
               setOutputTests((prevState) => addOutputTests(prevState, data, 1));
               setTestsResults((prevState) => [...prevState, output.includes("✓") ? true : false]);
-          
-            } 
+
+            }
             else if (output.includes("Third")) {
               setOutputTests((prevState) => addOutputTests(prevState, data, 2));
               setTestsResults((prevState) => [...prevState, output.includes("✓") ? true : false]);
             }
           }
 
-          if(output.includes("Testes ›")) {
+          if (output.includes("Testes ›")) {
             const regex = /(?=^.*?Testes ›)/gm;
             const testErrors = data.split(regex);
-            
+
             setOutputTests((prevState) => ([
               [...prevState[0], ANSIConverter.toHtml(testErrors[0])],
               [...prevState[1], ANSIConverter.toHtml(testErrors[1])],
@@ -206,10 +208,12 @@ export default function Home() {
     return currentDate > expirationDate ? false : true;
   };
 
+  // Get question
   useEffect(() => {
     const tokenValidity = verifyTokenValidity(user.token.expiration);
+    setAnswer(false)
 
-    if(tokenValidity) {
+    if (tokenValidity) {
       dispatch(getQuestion());
     } else {
       dispatch(logout());
@@ -220,21 +224,42 @@ export default function Home() {
 
   }, []);
 
+  // Reset value states
   useEffect(() => {
     dispatch(resetQuestion());
   }, [dispatch]);
 
+
   useEffect(() => {
-    if(testsResults[0] && testsResults[1] && testsResults[2]) {
-      const modal = document.querySelector("#modal");
-      modal.classList.remove("hide");
+    if (testsResults.length > 0) {
+      if (testsResults[0] && testsResults[1] && testsResults[2]) {
+        setAnswer(true);
+        const modal = document.querySelector("#modal");
+        modal.classList.remove("hide");
+      } else if(testsResults[0] === false || testsResults[1] === false || testsResults[2] === false){
+        dispatch(answerQuestion({
+          status: "FAILED",
+          questionid: question.id,
+          points: question.level === "easy" ? 25 : (
+            question.level === "medium" ? 50 : 100
+          ),
+        }))
+      }
     }
   }, [testsResults]);
 
+  useEffect(() => {
+    if (question) {
+      if (question.answer) {
+        setAnswer(true);
+      }
+    }
+  }, [question]);
+
   return (
     <div className="home">
-      <Modal />
       <Navbar />
+      <Modal />
       {
         loadingQuestion || errorQuestion ? (
           <LoadingAnimation />
@@ -274,12 +299,16 @@ export default function Home() {
                       }
                       {
                         !loadingDependencies ? (
-                          !dependenciesResult ? (
-                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
+                          !answer ? (
+                            !dependenciesResult ? (
+                              <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
+                            ) : (
+                              <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
+                            )
                           ) : (
                             <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
                           )
-                         ) : (
+                        ) : (
                           <div className="loader"></div>
                         )
                       }
@@ -303,14 +332,18 @@ export default function Home() {
                       }
                       {
                         !loadingTests ? (
-                          testsResults.length === 0 ? (
-                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
-                          ) : (
-                            testsResults[0] === true ? (
-                              <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
+                          !answer ? (
+                            testsResults.length === 0 ? (
+                              <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
                             ) : (
-                              <MdClose className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--error" />
+                              testsResults[0] === true || answer ? (
+                                <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
+                              ) : (
+                                <MdClose className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--error" />
+                              )
                             )
+                          ) : (
+                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
                           )
                         ) : (
                           <div className="loader"></div>
@@ -337,14 +370,18 @@ export default function Home() {
                       }
                       {
                         !loadingTests ? (
-                          testsResults.length === 0 ? (
-                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
-                          ) : (
-                            testsResults[1] === true ? (
-                              <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
+                          !answer ? (
+                            testsResults.length === 0 ? (
+                              <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
                             ) : (
-                              <MdClose className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--error" />
+                              testsResults[1] === true || answer ? (
+                                <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
+                              ) : (
+                                <MdClose className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--error" />
+                              )
                             )
+                          ) : (
+                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
                           )
                         ) : (
                           <div className="loader"></div>
@@ -371,14 +408,18 @@ export default function Home() {
                       }
                       {
                         !loadingTests ? (
-                          testsResults.length === 0 ? (
-                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
-                          ) : (
-                            testsResults[2] === true ? (
-                              <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
+                          !answer ? (
+                            testsResults.length === 0 ? (
+                              <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--default" />
                             ) : (
-                              <MdClose className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--error" />
+                              testsResults[2] === true || answer ? (
+                                <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
+                              ) : (
+                                <MdClose className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--error" />
+                              )
                             )
+                          ) : (
+                            <MdDone className="toggle-menu__icon toggle-menu__icon-status toggle-menu__icon-status--success" />
                           )
                         ) : (
                           <div className="loader"></div>
@@ -397,11 +438,17 @@ export default function Home() {
                   </li>
                 </ul>
                 <div className="wrapper-btn">
-                  {!loadingDependencies && !loadingTests ?
-                    <button className="btn-editor" onClick={handleClick}>Enviar</button>
-                    :
-                    <button className="btn-editor" onClick={handleClick} disabled>Execultando...</button>
+                  {
+                    !answer ? (
+                      !loadingDependencies && !loadingTests ?
+                        <button className="btn-editor" onClick={handleClick}>Enviar</button>
+                        :
+                        <button className="btn-editor btn--disabled" onClick={handleClick} disabled>Execultando...</button>
+                    ) : (
+                      <button className="btn-editor btn--disabled" disabled>Enviar</button>
+                    )
                   }
+
                 </div>
               </div>
             </div>

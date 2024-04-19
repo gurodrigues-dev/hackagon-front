@@ -15,7 +15,7 @@ export const getQuestion = createAsyncThunk(
       const userData = JSON.parse(localStorage.getItem("data"));
 
       const data = await questionServices.getQuestion(userData.token.value);
-      
+
       if(data.error) {
         return thunkAPI.rejectWithValue(data.error);
       }
@@ -33,7 +33,9 @@ export const createQuestion = createAsyncThunk(
   "question/create",
   async(dataQuestion, thunkAPI) => {
     try {
+
       const data = await questionServices.createQuestion(dataQuestion);
+
       if(data.error) {
         return thunkAPI.rejectWithValue(data.error);
       }
@@ -42,6 +44,26 @@ export const createQuestion = createAsyncThunk(
 
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
+    } 
+  }
+);
+
+export const answerQuestion = createAsyncThunk(
+  "question/answer",
+  async(answer, thunkAPI) => {
+    try {
+      const userData = JSON.parse(localStorage.getItem("data"));
+
+      const data = await questionServices.answerQuestion(answer, userData.token.value);
+
+      if(data.error) {
+        return thunkAPI.rejectWithValue(data.error);
+      }
+
+      return data;
+
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     } 
   }
 );
@@ -86,6 +108,20 @@ export const questionSlice = createSlice({
       .addCase(createQuestion.rejected, (state) => {
         state.loading = false;
         state.error = true;
+        state.success = false;
+      })
+      .addCase(answerQuestion.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(answerQuestion.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+        state.success = true;
+      })
+      .addCase(answerQuestion.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action;
         state.success = false;
       });
   }
