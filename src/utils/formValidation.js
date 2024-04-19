@@ -4,6 +4,7 @@ function formValidation ({
   email = null, 
   password = null, 
   username = null,
+  cognitoPassword = null, 
   title = null, 
   description = null, 
   date = null, 
@@ -32,6 +33,11 @@ function formValidation ({
       errors.password = 'Senha é obrigatória';
     } else if (!regularExpression.test(password)) {
       errors.password = "A senha deve conter no mínimo 6 caracteres e um número"
+    }
+  }
+  if(cognitoPassword !== null) {
+    if (!cognitoPassword.trim()) {
+      errors.password = 'Senha é obrigatória';
     }
   }
 
@@ -76,11 +82,13 @@ function formValidation ({
           return null
         }
       })
-      
+
       errors[`testCase${index + 1}`].params = [...params];
       
       if(!element.response.trim()) {
         errors[`testCase${index + 1}`].response = "Obrigatório!"
+      } else if(params.every(param => param === null)) {
+        delete errors[`testCase${index + 1}`]
       }
     });
   }

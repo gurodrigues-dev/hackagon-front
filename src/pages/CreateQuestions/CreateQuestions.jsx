@@ -102,15 +102,21 @@ export default function CreateQuestions() {
 
     const newErrors = formValidation({
       username,
-      password,
+      cognitoPassword: password,
       title,
       description,
       date,
       level,
       testCase
-    })
+    });
 
-    if(newErrors) {
+    // const verifyParams = Object.values(newErrors)
+    //   .filter(item => item.params)
+    //   .every((item) => {
+    //     return item.params.every((param) => param === null)
+    //   })
+
+    if(newErrors ) {
       setInputErrors(newErrors);
     } else {
       const question = {
@@ -126,7 +132,7 @@ export default function CreateQuestions() {
           test3: { ...testCase[2] },
         }
       };
-  
+      console.log("Entrou no create")
       dispatch(createQuestion(question));
     }
 
@@ -236,6 +242,7 @@ export default function CreateQuestions() {
               onChange={(e) => setLevel(e.target.value)}
               value={level || ""}
             >
+              <option className="select-level__option" value="">Defult</option>
               <option className="select-level__option" value="easy">Fácil</option>
               <option className="select-level__option" value="medium">Média</option>
               <option className="select-level__option" value="hard">Difícil</option>
