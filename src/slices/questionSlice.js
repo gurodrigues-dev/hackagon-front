@@ -110,17 +110,11 @@ export const questionSlice = createSlice({
         state.error = true;
         state.success = false;
       })
-      .addCase(answerQuestion.pending, (state) => {
-        state.loading = true;
-        state.error = false;
-      })
       .addCase(answerQuestion.fulfilled, (state) => {
-        state.loading = false;
         state.error = null;
         state.success = true;
       })
       .addCase(answerQuestion.rejected, (state, action) => {
-        state.loading = false;
         state.error = action;
         state.success = false;
       });
