@@ -26,13 +26,18 @@
   gap: 1rem;
   align-items: center;
   cursor: pointer;
+  transition: .4s;
+}
+
+.user-infos:hover {
+  transform: scale(1.05);
 }
 
 .user-infos__points {
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  color: var(--Medium-difficulty-text)
+  color: var(--Dark-blue);
 }
 
 .user-infos-inner {

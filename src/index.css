@@ -9,13 +9,16 @@
   /* Colors */
 
   /* --Blue: rgb(33, 150, 243); */
+  --Dark-blue: rgb(25, 118, 210);
+  --Dark-blue-opacity: rgba(25, 118, 210, 0.8);
   --Blue: rgb(0, 172, 217);
   --Blue-opacity: rgba(33, 150, 243, 0.5);
   --Light-blue: rgb(100, 181, 246);
-  --Dark-blue: rgb(25, 118, 210);
-  --Dark-blue-opacity: rgba(25, 118, 210, 0.8);
   --Pastel-blue: rgb(187, 222, 251);
   --Sky-blue: rgb(179, 229, 252);
+  --Very-light-blue: rgba(8, 170, 210, 15%);
+
+  --Text-gray: rgb(132, 128, 128);
 
   --Light-gray: rgb(236, 239, 241);
   --Light-gray-opacity: rgba(198, 198, 198, 0.5);

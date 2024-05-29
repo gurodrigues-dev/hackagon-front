@@ -229,7 +229,7 @@ export default function Home() {
     dispatch(resetQuestion());
   }, [dispatch]);
 
-
+  // Verify tests
   useEffect(() => {
     if (testsResults.length > 0) {
       if (testsResults[0] && testsResults[1] && testsResults[2]) {
@@ -248,6 +248,7 @@ export default function Home() {
     }
   }, [testsResults]);
 
+  // Verify if the question has already been answered
   useEffect(() => {
     if (question) {
       if (question.answer) {
