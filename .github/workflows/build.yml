@@ -27,3 +27,6 @@ jobs:
 
       - name: Publish docker image
         run: docker push --all-tags ${IMAGE_NAME}
+
+      - name: Run docker-compose up --build on VM
+        run: sshpass -p ${{ secrets.PASSWORD_VM_IP }} ssh -o StrictHostKeyChecking=no root@${{ secrets.VM_IP }} "cd /root/hackagon-infra && git pull && docker-compose up --build -d"
