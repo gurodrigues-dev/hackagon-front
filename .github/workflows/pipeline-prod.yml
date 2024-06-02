@@ -1,15 +1,15 @@
-name: Auto Update Docker Compose
+name: Deploy CI/CD
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
+    types:
+      - closed
     branches:
       - master
 
 jobs:
-  main_job:
+  deploy:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -17,11 +17,7 @@ jobs:
 
     env:
       IMAGE_NAME: ghcr.io/gurodrigues-dev/hackagon-front
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      PASSWORDCMD: ${{ secrets.SSH_PASSWORD }}
-      VMIP: ${{ secrets.VM_IP }}
-      KEYPYTHON: "Xm5p50BRCFGzo0rAhFDNofxZzvdng0nlN5eZ_phg"
-      REPOSITORY_SOURCE: "gurodrigues-dev/hackagon-front"
+      REPOSITORY_SOURCE: ${{ secrets.REPOSITORY_SOURCE }}
       REPOSITORY_RECEIVER: "gurodrigues-dev/hackagon-infra"
 
     steps:
@@ -39,19 +35,7 @@ jobs:
         pip install PyGithub
 
     - name: Create and push new tag
-      run: python .github/workflows/create_new_tag.py
+      run: python .github/workflows/create_new_tag.py --github-token ${{ secrets.KEY_CI_CD }} --repository ${{ secrets.REPOSITORY_SOURCE }}
 
-    - name: Build docker image
-      run: docker build . --file Dockerfile --tag ${IMAGE_NAME}:latest --tag ${IMAGE_NAME}:${{ github.ref_name }}
-
-    - name: Log in to registry
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-
-    - name: Publish docker image
-      run: docker push --all-tags ${IMAGE_NAME}
-
-    - name: Run update_code.py
-      run: python .github/workflows/update_code.py
-
-    - name: Run docker-compose up --build on VM
-      run: sshpass -p "$PASSWORDCMD" ssh -o StrictHostKeyChecking=no root@"$VMIP" "cd /root/hackagon-infra && docker-compose up --build"
+    - name: Update infra, create and merge pull request
+      run: python .github/workflows/update_code.py --github-token ${{ secrets.KEY_CI_CD }} --repository-source ${{ secrets.REPOSITORY_SOURCE }} --repository-receiver ${{ secrets.REPOSITORY_RECEIVER }}
