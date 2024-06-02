@@ -1,16 +1,8 @@
 import argparse
-import os
 from github import Github, InputGitAuthor
 
-python_key = os.getenv('KEYPYTHON')
-repository_source = os.getenv('REPOSITORY_SOURCE')
-
-def decrypt(text):
-    text_inverse = text[::-1]
-    return text_inverse
-
-def create_new_tag(python_key, repo_name):
-    g = Github(python_key)
+def create_new_tag(github_token, repo_name):
+    g = Github(github_token)
     repo = g.get_repo(repo_name)
 
     tags = repo.get_tags()
@@ -28,7 +20,10 @@ def create_new_tag(python_key, repo_name):
     print(f"Nova tag {new_tag} criada com sucesso.")
 
 if __name__ == '__main__':
-    print(repository_source)
-    token = decrypt(python_key)
-    # print(token)
-    create_new_tag(token, repository_source)
+    parser = argparse.ArgumentParser(description='Cria e envia uma nova tag para um repositório no GitHub.')
+    parser.add_argument('--github-token', required=True, help='GitHub token para autenticação')
+    parser.add_argument('--repository', required=True, help='Nome do repositório (por exemplo, "nomeusuario/nomerepositorio")')
+    
+    args = parser.parse_args()
+
+    create_new_tag(args.github_token, args.repository)
