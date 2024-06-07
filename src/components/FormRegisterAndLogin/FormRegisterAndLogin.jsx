@@ -4,7 +4,7 @@ import "./FormRegisterAndLogin.css";
 // Hooks
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 // Utils
 import formValidation from "../../utils/formValidation"
@@ -15,6 +15,10 @@ import Notification from "../Notification/Notification";
 // Redux
 import { register, reset, login } from "../../slices/authSlice";
 
+// Icons
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
+
 
 function FormRegisterAndLogin({ registerForm }) {
 
@@ -22,6 +26,7 @@ function FormRegisterAndLogin({ registerForm }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [inputErrors, setInputErrors] = useState({});
 
   const navigate = useNavigate();
@@ -67,13 +72,9 @@ function FormRegisterAndLogin({ registerForm }) {
     }
   }
 
-
-  // Login após o cadastro
-  // useEffect(() => {
-  //   if(success) {
-  //     dispatch(login({ nickname, password }));
-  //   }
-  // }, [success, dispatch, nickname, password]);
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   useEffect(() => {
     if(error) {
@@ -113,23 +114,30 @@ function FormRegisterAndLogin({ registerForm }) {
             onChange={(e) => setEmail(e.target.value)}
             value={email || ''}
           />
-          {
-            inputErrors.email && <Notification message={inputErrors.email} type="error"/>
-          }
+          { inputErrors.email && <Notification message={inputErrors.email} type="error"/> }
         </div>
       }
       <div>
-        <input
-          className={!inputErrors.password ? "form__input inputs" : "inputs form__input inputs--error"}
-          type="password"
-          name="password"
-          placeholder="Senha"
-          required
-          onChange={(e) => setPassword(e.target.value)}
-          value={password || ''}
-        />
+        <div className={!inputErrors.password ? "password-container password" : "password-conatiner password inputs--error"}>
+          <input
+            className="password__input"
+            type={passwordVisible ? "text" : "password" }
+            name="password"
+            placeholder="Senha"
+            required
+            onChange={(e) => setPassword(e.target.value)}
+            value={password || ''}
+          />
+          {
+            passwordVisible ?
+              <FaEyeSlash className="password__icon" onClick={togglePasswordVisibility}/>  
+            :
+              <FaEye className="password__icon" onClick={togglePasswordVisibility}/>
+          }
+        </div>
         { inputErrors.password && <Notification message={inputErrors.password} type="error"/> }
       </div>
+      { !registerForm && <Link to="/forgot-password/email" className="form__forgot-password">Esqueceu sua senha?</Link>}
 
       { !loading && <input className="form__btn" type="submit" value={registerForm ? "Cadastrar" : "Entrar"} /> }
       { loading && <input className="form__btn" type="submit" value="Aguarde..." disabled/> }

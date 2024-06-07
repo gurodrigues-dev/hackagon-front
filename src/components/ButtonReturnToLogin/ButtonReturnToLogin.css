@@ -1,0 +1,45 @@
+.return-login {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--Dark-blue);
+  font-weight: bold;
+  font-size: 1.6rem;
+  border: none;
+  transition: 0.4s;
+}
+
+.return-login:hover {
+  color: var(--Blue);
+  transform: scale(1.01);
+}
+
+.return-login__icon {
+  width: 2rem;
+  height: 2rem;
+  color: var(--Black);
+}
+
+.return-login:hover .return-login__icon {
+  color: var(--Blue);
+}
+
+.forgot-password--small-size .return-login {
+  height: 5rem;
+  color: var(--White);
+  background: var(--Dark-blue);
+  padding: 1rem;
+  border-radius: 10px;
+}
+.forgot-password--small-size .return-login:hover {
+  background: var(--Blue);
+  transform: scale(1.01);
+}
+
+.forgot-password--small-size .return-login__icon {
+  color: var(--White)
+}
+
+.forgot-password--small-size .return-login:hover .return-login__icon {
+  color: var(--White);
+}

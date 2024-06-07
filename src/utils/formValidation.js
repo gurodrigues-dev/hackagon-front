@@ -3,13 +3,15 @@ function formValidation ({
   nickname = null, 
   email = null, 
   password = null, 
+  confirmPassword = null,
   username = null,
   cognitoPassword = null, 
   title = null, 
   description = null, 
   date = null, 
   level = null, 
-  testCase = null
+  testCase = null,
+  code = null
 }) {
   const errors = {};
   const regularExpression = /^(?=.*[0-9])[a-zA-Z0-9]{6,}$/;
@@ -24,26 +26,35 @@ function formValidation ({
     if (!email.trim()) {
       errors.email = 'Email é obrigatório!';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = 'O campo Email inválido!';
+      errors.email = 'Email inválido!';
     }
   }
 
   if(password !== null) {
     if (!password.trim()) {
-      errors.password = 'Senha é obrigatória';
+      errors.password = 'Senha é obrigatória!';
     } else if (!regularExpression.test(password)) {
-      errors.password = "A senha deve conter no mínimo 6 caracteres e um número"
+      errors.password = "A senha deve conter no mínimo 6 caracteres e um número."
     }
   }
+
+  if(confirmPassword !== null) {
+    if (!confirmPassword.trim()) {
+      errors.confirmPassword = 'Campo obrigatório!';
+    } else if (confirmPassword !== password) {
+      errors.confirmPassword = "As senhas devem ser iguais."
+    }
+  }
+
   if(cognitoPassword !== null) {
     if (!cognitoPassword.trim()) {
-      errors.password = 'Senha é obrigatória';
+      errors.password = 'Senha é obrigatória!';
     }
   }
 
   if(username !== null) {
     if(!username.trim()) {
-      errors.username = "Usuário é obrigatório";
+      errors.username = "Usuário é obrigatório!";
     }
   }
 
@@ -91,6 +102,15 @@ function formValidation ({
         delete errors[`testCase${index + 1}`]
       }
     });
+
+  }
+
+  if(code !== null) {
+    if(!code.trim()) {
+      errors.code =  "Campo obrigatório!";
+    } else if (!/^-?\d+$/.test(code)) {
+      errors.code =  "Formato invalido!";
+    }
   }
 
   return Object.keys(errors).length === 0 ? null : errors

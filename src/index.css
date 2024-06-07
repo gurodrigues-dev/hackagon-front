@@ -105,9 +105,10 @@ a, input[type="submit"], button {
   cursor: pointer;
 }
 
-.wrapper-login-and-register {
-  width: 500px;
-  height: 600px;
+.wrapper-form,
+.forgot-password {
+  width: 50rem;
+  height: 60rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -127,22 +128,47 @@ a, input[type="submit"], button {
   transition: .4s;
 }
 
-.inputs:hover {
+.password {
+  border: 2px solid var(--Blue);
+  border-radius: 10px;
+  padding: 1rem;
+  transition: .4s;
+  display: flex;
+  align-items: center;
+}
+
+.password__input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+}
+
+.password__icon {
+  width: 2rem;
+  height: 2rem;
+  color: var(--Dark-blue);
+  cursor: pointer;
+}
+
+.inputs:hover,
+.password:hover {
   border-color: var(--Dark-blue);
   transform: scale(1.02);
 }
 
-.inputs.inputs--error {
+.inputs.inputs--error,
+.password.inputs--error {
   border-color: var(--Red);
 }
 
-.inputs.inputs--error:hover {
-  border-color: var(--Dark-red);
+.inputs--error .password__icon {
+  color: var(--Red)
 }
 
-.logo {
-  width: 20rem;
-  height: auto;
+.inputs.inputs--error:hover,
+.password.inputs--error:hover {
+  border-color: var(--Dark-red);
 }
 
 .hide {

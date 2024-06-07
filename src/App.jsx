@@ -11,6 +11,10 @@ import Register from "./pages/Register/Register";
 import Home from "./pages/Home/Home";
 import CreateQuestions from "./pages/CreateQuestions/CreateQuestions";
 import Ranking from "./pages/Ranking/Ranking";
+import ForgotPasswordEmail from "./pages/ForgotPassword/ForgotPasswordEmail";
+import ForgotPasswordCode from "./pages/ForgotPassword/ForgotPasswordCode";
+import NewPassword from "./pages/ForgotPassword/NewPassword";
+import ForgotPasswordMessage from "./pages/ForgotPassword/ForgotPasswordMessage";
 
 // Components
 import LoadingAnimation from "./components/LoadingAnimation/LoadingAnimation";
@@ -30,8 +34,12 @@ function App() {
           <Route path="/" element={auth ? <Home /> : <Navigate to="/login" />} />
           <Route path="/login" element={!auth ? <Login /> : <Navigate to="/" />} />
           <Route path="/register" element={!auth ? <Register /> : <Navigate to="/" />} />
-          <Route path="/questions" element={<CreateQuestions />} />
           <Route path="/ranking" element={auth ? <Ranking /> : <Navigate to="/login" />} />
+          <Route path="/forgot-password/email" element={<ForgotPasswordEmail />} />
+          <Route path="/forgot-password/code" element={<ForgotPasswordCode />} />
+          <Route path="/forgot-password/new-password" element={<NewPassword />} />
+          <Route path="/forgot-password/message" element={<ForgotPasswordMessage />} />
+          <Route path="/questions" element={<CreateQuestions />} />
         </Routes>
       </BrowserRouter>
     </div>

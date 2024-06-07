@@ -7,7 +7,7 @@ import FormRegisterAndLogin from "../../components/FormRegisterAndLogin/FormRegi
 
 function Register() {
   return (
-    <div className="wrapper-login-and-register">
+    <div className="wrapper-form">
       <div className="register-header">
         <h1>Crie uma nova conta<span className="register__title-dot">.</span></h1>
         <span>

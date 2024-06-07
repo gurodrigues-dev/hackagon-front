@@ -12,6 +12,7 @@ import { logout, reset } from "../../slices/authSlice";
 // Components
 import LoadingAnimation from "../../components/LoadingAnimation/LoadingAnimation";
 import Navbar from "../../components/Navbar/Navbar";
+import UserIcon from "../../components/UserIcon/UserIcon";
 
 // Icons
 import { PiCoinVerticalFill } from "react-icons/pi";
@@ -30,7 +31,6 @@ export default function Ranking() {
   };
 
   useEffect(() => {
-    console.log(user)
     const tokenValidity = verifyTokenValidity(user.token.expiration);
 
     if (tokenValidity) {
@@ -47,12 +47,6 @@ export default function Ranking() {
   useEffect(() => {
     dispatch(resetRanking());
   }, [dispatch]);
-
-  // Reset value states
-  useEffect(() => {
-    console.log(ranking)
-  }, [ranking]);
-
 
 
   return (
@@ -72,21 +66,21 @@ export default function Ranking() {
           <div className="content-table">
             {
               ranking.length > 0 ? (
-                ranking.map(rankingUser => (
+                ranking.map((rankingUser, index) => (
                   <div key={rankingUser.nickname} 
                   className={
                     rankingUser.nickname === user.user.nickname ? (
-                      rankingUser.position % 2 === 0 ? "table-row table-row--blue table-row--current-user" : "table-row table-row--current-user" 
+                      (index + 1) % 2 === 0 ? "table-row table-row--blue table-row--current-user" : "table-row table-row--current-user" 
                     ) : (
-                      rankingUser.position % 2 === 0 ? "table-row table-row--blue" : "table-row" 
+                      (index + 1) % 2 === 0 ? "table-row table-row--blue" : "table-row" 
                     )
                   }
                   >
                     <div className="container">
-                      <span className="table-row__classification">{rankingUser.position}</span>
+                      <span className="table-row__classification">{index + 1}</span>
                     </div>
                     <div className="user-container">
-                      <div className="table-row__img"></div>
+                      <UserIcon />
                       <span className="table-row__nickname">{rankingUser.nickname}</span>
                     </div>
                     <div className="container">
