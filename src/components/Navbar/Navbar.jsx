@@ -12,6 +12,8 @@ import { FiLogOut } from "react-icons/fi";
 import { PiCoinVerticalFill } from "react-icons/pi";
 import { LuTrophy } from "react-icons/lu";
 
+// Components
+import UserIcon from "../UserIcon/UserIcon";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -29,6 +31,11 @@ export default function Navbar() {
   const handleBtnRankingClick = () => {
     navigate("/ranking")
   }
+  
+  const handleProfileClick = () => {
+    console.log("Ola")
+    navigate("/profile");
+  }
 
   return (
     <nav className="navbar">
@@ -39,11 +46,11 @@ export default function Navbar() {
         <button className="menu__btn" onClick={handleBtnRankingClick}>
           <LuTrophy className="menu__icon"/>
         </button>
-        <div className="user-infos">
+        <div className="user-infos" onClick={handleProfileClick}>
           <span className="user-infos__points">{user.points} <PiCoinVerticalFill /></span>
           <div className="user-infos-inner">
             <span className="user-infos__nickname">{ user.nickname }</span>
-            <div className="user-infos__img"></div>
+            <UserIcon />
           </div>
         </div>
         <button className="menu__btn" onClick={handleLogout}>

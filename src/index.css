@@ -105,9 +105,10 @@ a, input[type="submit"], button {
   cursor: pointer;
 }
 
-.wrapper-login-and-register {
-  width: 500px;
-  height: 600px;
+.wrapper-form,
+.forgot-password {
+  width: 50rem;
+  height: 60rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -138,11 +139,6 @@ a, input[type="submit"], button {
 
 .inputs.inputs--error:hover {
   border-color: var(--Dark-red);
-}
-
-.logo {
-  width: 20rem;
-  height: auto;
 }
 
 .hide {
