@@ -38,7 +38,7 @@ function NewPassword() {
     const newErrors = formValidation({ password: newPassword, confirmPassword });
 
     if (!newErrors && email) {
-      dispatch(changePassword({ newPassword, email }));
+      dispatch(changePassword({ password: newPassword, email }));
     } else {
       setInputErrors(newErrors);
     }

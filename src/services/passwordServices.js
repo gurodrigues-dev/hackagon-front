@@ -38,7 +38,7 @@ const verificationCode = async({ code, email }) => {
 const changePassword = async ({ password, email }) => {
   try {
     const response =  await axios.patch(`${api}/password`,
-      JSON.stringify({ password }),
+      { password: password },
       {
         headers: { 
         "Content-Type": "application/json",
