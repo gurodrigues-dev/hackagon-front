@@ -31,11 +31,6 @@ export default function Navbar() {
   const handleBtnRankingClick = () => {
     navigate("/ranking")
   }
-  
-  const handleProfileClick = () => {
-    console.log("Ola")
-    navigate("/profile");
-  }
 
   return (
     <nav className="navbar">
@@ -46,7 +41,7 @@ export default function Navbar() {
         <button className="menu__btn" onClick={handleBtnRankingClick}>
           <LuTrophy className="menu__icon"/>
         </button>
-        <div className="user-infos" onClick={handleProfileClick}>
+        <div className="user-infos">
           <span className="user-infos__points">{user.points} <PiCoinVerticalFill /></span>
           <div className="user-infos-inner">
             <span className="user-infos__nickname">{ user.nickname }</span>

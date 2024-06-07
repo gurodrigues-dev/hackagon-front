@@ -7,7 +7,7 @@ import FormRegisterAndLogin from "../../components/FormRegisterAndLogin/FormRegi
 
 function Login() {
   return (
-    <div className="wrapper-login-and-register login">
+    <div className="wrapper-form login">
       <div className="login-header">
         <h1 className="login__title">bem vindo de volta</h1>
         <span>
